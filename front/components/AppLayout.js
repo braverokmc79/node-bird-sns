@@ -1,29 +1,40 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link'
-import { Menu, Input, Row, Col } from 'antd';
+import { Menu, Input, Row, Col, MenuProps } from 'antd';
+import { useNavigate } from 'react-router-dom';
+
+import UserProfile from './UserProfile';
+import LoginForm from './LoginForm';
+
+
+const items = [
+    { label: <Link href="/">노드버드</Link>, key: 'item-1' },
+    { label: <Link href="/profile">프로필</Link>, key: 'item-2' },
+    {
+        label: <Input.Search enterButton style={{ verticalAlign: 'middle' }} />,
+        key: 'item-3'
+    },
+    { label: <Link href="/signup">회원가입</Link>, key: 'item-4' },
+];
 
 const AppLayout = ({ children }) => {
 
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [current, setCurrent] = useState('item-1');
+    const onClick = useCallback((e) => {
+        console.log('click ', e);
+        setCurrent(e.key);
+    }, []);
+
+
     return (
         <div>
-            <Menu mode="horizontal">
-                <Menu.Item key="1">
-                    <Link href="/">노드버드</Link>
-                </Menu.Item>
-                <Menu.Item key="2">
-                    <Link href="/profile">프로필</Link>
-                </Menu.Item>
-                <Menu.Item key="3">
-                    <Input.Search enterButton style={{ verticalAlign: 'middle' }} />
-                </Menu.Item>
-                <Menu.Item key="4">
-                    <Link href="/signup">회원가입</Link>
-                </Menu.Item>
-            </Menu>
+
+            <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} />
             <Row gutter={8}>
                 <Col xs={24} md={6} >
-                    왼쪽 메뉴
+                    {isLoggedIn ? <UserProfile /> : <LoginForm />}
                 </Col>
                 <Col xs={24} md={6} >
                     {children}
@@ -34,7 +45,6 @@ const AppLayout = ({ children }) => {
                     </a>
                 </Col>
             </Row>
-
 
         </div>
     );
