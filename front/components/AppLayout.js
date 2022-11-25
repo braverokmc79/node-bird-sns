@@ -1,18 +1,22 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link'
-import { Menu, Input, Row, Col, MenuProps } from 'antd';
+import { Menu, Input, Row, Col } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
 import UserProfile from './UserProfile';
 import LoginForm from './LoginForm';
 
+const SearchInput = styled(Input.Search)`
+    vertical-align: 'middle' ;
+`;
 
 const items = [
     { label: <Link href="/">노드버드</Link>, key: 'item-1' },
     { label: <Link href="/profile">프로필</Link>, key: 'item-2' },
     {
-        label: <Input.Search enterButton style={{ verticalAlign: 'middle' }} />,
+        label: <SearchInput enterButton />,
         key: 'item-3'
     },
     { label: <Link href="/signup">회원가입</Link>, key: 'item-4' },
@@ -30,7 +34,6 @@ const AppLayout = ({ children }) => {
 
     return (
         <div>
-
             <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} />
             <Row gutter={8}>
                 <Col xs={24} md={6} >
@@ -45,7 +48,6 @@ const AppLayout = ({ children }) => {
                     </a>
                 </Col>
             </Row>
-
         </div>
     );
 
