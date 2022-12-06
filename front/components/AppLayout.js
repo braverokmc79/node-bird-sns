@@ -35,14 +35,21 @@ const AppLayout = ({ children }) => {
     return (
         <div>
             <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} />
-            <Row gutter={8}>
-                <Col xs={24} md={6} >
+            <Row gutter={8} className="mt-20">
+
+                <Col xs={24} md={6} className="text-center mt-20">
+                    Hello.Next
+                </Col>
+
+                <Col xs={24} md={6} className="mt-20">
                     {isLoggedIn ? <UserProfile setIsLoggedIn={setIsLoggedIn} /> : <LoginForm setIsLoggedIn={setIsLoggedIn} />}
                 </Col>
-                <Col xs={24} md={6} >
+
+                <Col xs={24} md={6} className="mt-20" >
                     {children}
                 </Col>
-                <Col xs={24} md={6} >
+
+                <Col xs={24} md={6} className="text-center mt-20">
                     <a href='https://macaronics.net' target="_blank" rel="noreferrer noopener"  >
                         Made by macaronics
                     </a>

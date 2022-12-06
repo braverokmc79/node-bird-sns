@@ -9,7 +9,7 @@ const ButtonWrapper = styled.div`
 `;
 
 const FormWrapper = styled(Form)`
-    margin-top: 100px;
+    margin-top: 5px;
     padding:10px;
 `;
 
