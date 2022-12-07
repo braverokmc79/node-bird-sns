@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { Menu, Input, Row, Col } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+
 
 import UserProfile from './UserProfile';
 import LoginForm from './LoginForm';
@@ -24,17 +26,21 @@ const items = [
 
 const AppLayout = ({ children }) => {
 
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [current, setCurrent] = useState('item-1');
+    const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+
+
+
+    // const [isLoggedIn, setIsLoggedIn] = useState(false);
+    // const [current, setCurrent] = useState('item-1');
     const onClick = useCallback((e) => {
         console.log('click ', e);
-        setCurrent(e.key);
+        //setCurrent(e.key);
     }, []);
 
 
     return (
         <div>
-            <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} />
+            <Menu onClick={onClick} mode="horizontal" items={items} />
             <Row gutter={8} className="mt-20">
 
                 <Col xs={24} md={6} className="text-center mt-20">
@@ -42,7 +48,7 @@ const AppLayout = ({ children }) => {
                 </Col>
 
                 <Col xs={24} md={6} className="mt-20">
-                    {isLoggedIn ? <UserProfile setIsLoggedIn={setIsLoggedIn} /> : <LoginForm setIsLoggedIn={setIsLoggedIn} />}
+                    {isLoggedIn ? <UserProfile /> : <LoginForm />}
                 </Col>
 
                 <Col xs={24} md={6} className="mt-20" >

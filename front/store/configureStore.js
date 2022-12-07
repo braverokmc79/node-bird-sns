@@ -1,8 +1,14 @@
 import { createWrapper } from 'next-redux-wrapper';
 import { legacy_createStore as createStore } from 'redux';
 
+import reducer from '../reducers';
+
 const configureSotre = () => {
     const store = createStore(reducer);
+    store.dispatch({
+        type: "CHANGE_NICKNAME",
+        data: "update"
+    })
     return store;
 };
 
