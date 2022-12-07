@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next dev -p 1111",
+    "dev": "next dev -p 3000",
     "build": "next build"
   },
   "author": "최준호",
