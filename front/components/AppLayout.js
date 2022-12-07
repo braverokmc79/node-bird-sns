@@ -1,8 +1,8 @@
-import React, { useCallback, useState, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link'
 import { Menu, Input, Row, Col } from 'antd';
-import { useNavigate } from 'react-router-dom';
+
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 
