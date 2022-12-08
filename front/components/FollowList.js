@@ -27,7 +27,7 @@ const FollowList = ({ header, data }) => {
     );
 };
 
-FollowList.prototype = {
+FollowList.propTypes = {
     header: PropTypes.string.isRequired,
     data: PropTypes.array.isRequired
 }
