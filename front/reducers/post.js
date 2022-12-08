@@ -8,9 +8,9 @@ const initialState = {
             },
             content: '첫 번째 게시글 #해시태그 #익스프레스',
             Images: [
-                { src: "" },
-                { src: "" },
-                { src: "" }
+                { src: "https://cdn.icon-icons.com/icons2/12/PNG/96/images_nikon_camera_1745.png" },
+                { src: "https://cdn.icon-icons.com/icons2/1222/PNG/96/1492616994-11-photo-google-gallery-image-picture-data-suit-services_83393.png" },
+                { src: "https://cdn.icon-icons.com/icons2/92/PNG/96/image_picture_16580.png" }
             ],
             Comments: [{
                 User: {
@@ -35,9 +35,9 @@ const initialState = {
             },
             content: '첫 번째 게시글 #해시태그 #익스프레스',
             Images: [
-                { src: "" },
-                { src: "" },
-                { src: "" }
+                { src: "https://cdn.icon-icons.com/icons2/12/PNG/96/images_nikon_camera_1745.png" },
+                { src: "https://cdn.icon-icons.com/icons2/1222/PNG/96/1492616994-11-photo-google-gallery-image-picture-data-suit-services_83393.png" },
+                { src: "https://cdn.icon-icons.com/icons2/92/PNG/96/image_picture_16580.png" }
             ],
             Comments: [{
                 User: {
