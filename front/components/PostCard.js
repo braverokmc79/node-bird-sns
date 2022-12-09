@@ -1,13 +1,20 @@
 import React, { useState, useCallback } from 'react';
 import { Card, Button, Avatar, Image, Popover, List } from 'antd';
 import { Comment } from '@ant-design/compatible';
-
 import { RetweetOutlined, HeartOutlined, MessageOutlined, EllipsisOutlined, HeartTwoTone } from '@ant-design/icons';
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux';
 import PostImages from './PostImages';
 import CommentForm from './CommentForm';
-//import Comment from './Comment';
+import { createGlobalStyle } from 'styled-components';
+
+
+const Global = createGlobalStyle`
+    .ant-card-actions{
+     background: #eeeeee !important;
+    }
+`;
+
 
 
 const PostCard = ({ post }) => {
@@ -36,7 +43,9 @@ const PostCard = ({ post }) => {
         </div >
     );
     return (
-        <div style={{ marginBottom: 30 }}>
+        <div style={{ marginBottom: 50 }}>
+            <Global />
+
             <Card
                 cover={post.Images[0] && <PostImages images={post.Images} />}
                 actions={[
@@ -49,16 +58,12 @@ const PostCard = ({ post }) => {
                     </Popover>
                 ]}
             >
-
                 <Card.Meta
                     avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
                     title={post.User.nickname}
                     description={post.content}
                 />
-
                 <Image />
-
-
 
             </Card >
             {commentFormOpened && (

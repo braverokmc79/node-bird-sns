@@ -1,9 +1,9 @@
-import '../styles/globals.css'
 import React from 'react';
 import PropTypes from 'prop-types';
 import 'antd/dist/antd';
 import Head from 'next/head';
 import wrapper from '../store/configureStore';
+import '../styles/globals.css'
 
 
 const NodeBird = ({ Component }) => {
