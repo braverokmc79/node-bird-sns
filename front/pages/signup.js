@@ -52,29 +52,29 @@ const SignUp = () => {
 
                 <Form onFinish={onSubmit}>
                     <div>
-                        <lable htmlFor="user-id">아이디</lable>
+                        <label htmlFor="user-id">아이디</label>
                         <br />
-                        <Input name="user-id" value={id} require onChange={onChangeId} />
+                        <Input name="user-id" value={id} require="true" onChange={onChangeId} />
                     </div>
 
 
                     <div>
-                        <lable htmlFor="user-nickName">닉네임</lable>
+                        <label htmlFor="user-nickName">닉네임</label>
                         <br />
-                        <Input name="user-nickName" value={nickName} require onChange={onChangeNickname} />
+                        <Input name="user-nickName" value={nickName} require="true" onChange={onChangeNickname} />
                     </div>
 
 
                     <div>
-                        <lable htmlFor="user-password">비밀번호</lable>
+                        <label htmlFor="user-password">비밀번호</label>
                         <br />
-                        <Input name="user-password" type="password" value={password} require onChange={onChangePassword} />
+                        <Input name="user-password" type="password" value={password} require="true" onChange={onChangePassword} />
                     </div>
 
                     <div>
                         <br />
-                        <lable htmlFor="user-passwordCheck">비밀번호</lable>
-                        <Input name="user-passwordCheck" type="password" value={passwordCheck} require onChange={conChangePasswordCheck} />
+                        <label htmlFor="user-passwordCheck">비밀번호</label>
+                        <Input name="user-passwordCheck" type="password" value={passwordCheck} require="true" onChange={conChangePasswordCheck} />
                     </div>
 
                     {passwordError && <ErroMessage>비밀번호가 일치하지 않습니다.</ErroMessage>}

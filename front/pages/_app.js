@@ -3,8 +3,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import 'antd/dist/antd';
 import Head from 'next/head';
-
-
 import wrapper from '../store/configureStore';
 
 

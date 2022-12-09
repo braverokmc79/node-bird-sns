@@ -28,10 +28,6 @@ const AppLayout = ({ children }) => {
 
     const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
-
-
-    // const [isLoggedIn, setIsLoggedIn] = useState(false);
-    // const [current, setCurrent] = useState('item-1');
     const onClick = useCallback((e) => {
         console.log('click ', e);
         //setCurrent(e.key);
@@ -41,26 +37,28 @@ const AppLayout = ({ children }) => {
     return (
         <div>
             <Menu onClick={onClick} mode="horizontal" items={items} />
-            <Row gutter={8} className="mt-20">
-
+            <Row gutter={24} className="mt-20">
                 <Col xs={24} md={6} className="text-center mt-20">
                     Hello.Next
                 </Col>
-
+            </Row>
+            <Row gutter={24} className="mt-20">
                 <Col xs={24} md={6} className="mt-20">
                     {isLoggedIn ? <UserProfile /> : <LoginForm />}
                 </Col>
-
-                <Col xs={24} md={6} className="mt-20" >
+                <Col xs={24} md={16} className="mt-20" >
                     {children}
                 </Col>
+            </Row>
 
-                <Col xs={24} md={6} className="text-center mt-20">
+            <Row gutter={24} className="mt-20">
+                <Col xs={24} md={24} className="text-center mt-20">
                     <a href='https://macaronics.net' target="_blank" rel="noreferrer noopener"  >
                         Made by macaronics
                     </a>
                 </Col>
             </Row>
+
         </div>
     );
 

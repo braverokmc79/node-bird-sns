@@ -2,7 +2,6 @@ import React, { useCallback } from 'react';
 import { Form, Input, Button } from 'antd';
 import styled from 'styled-components';
 import Link from 'next/link';
-import PropTypes from 'prop-types';
 import useInput from '../hooks/useInput';
 import { loginAction } from '../reducers/user';
 import { useDispatch } from 'react-redux';
@@ -25,7 +24,6 @@ const LoginForm = () => {
 
 
     const onSubmitForm = useCallback(() => {
-        console.log(id, password);
         dispatch(loginAction({ id, password }));
     }, [id, password])
 
@@ -57,7 +55,5 @@ const LoginForm = () => {
 };
 
 
-LoginForm.PropTypes = {
-    setIsLoggedIn: PropTypes.func.isRequired,
-}
+
 export default LoginForm;

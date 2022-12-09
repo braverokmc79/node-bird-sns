@@ -7,3 +7,7 @@
 .text-center{
   text-align: center;
 }
+
+.slick-slide img {
+    display: inline-block !important;
+}
