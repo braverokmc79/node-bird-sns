@@ -6,24 +6,10 @@ export const initialState = {
 }
 
 export const loginAction = (data) => {
-    return (dispatch, action) => {
-
-        dispatch(loginRequestAction());
-        axios.post('/api/login')
-            .then((res) => {
-                dispatch(loginSuccessAction(res.data));
-            })
-            .catch((err) => {
-                dispatch(loginFailureAction(err));
-            })
+    return {
+        type: "LOG_IN",
+        data
     }
-
-    // return {
-    //     type: "LOG_IN",
-    //     data
-    // }
-
-
 }
 
 export const loginRequestAction = (data) => {
