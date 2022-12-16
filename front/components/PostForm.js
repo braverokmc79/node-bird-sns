@@ -34,7 +34,7 @@ const PostForm = () => {
                 placeholder="어떤 신기한 일이 있었나요?"
             />
 
-            <div>
+            <div className='mt-5'>
                 <input type="file" multiple hidden ref={imageInput} style={{ display: "none" }} />
 
                 <Button onClick={onClickImageUpload}>이미지 업로드</Button>

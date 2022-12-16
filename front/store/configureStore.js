@@ -4,8 +4,15 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 import reducer from '../reducers';
 
+import thunkMiddleware from 'redux-thunk';
+const loggerMiddleware = ({ dispatch, getState }) => (next) => (action) => {
+    console.log("loggerMiddleware  :", action);
+    return next(action);
+}
+
+
 const configureSotre = () => {
-    const middlewares = [];
+    const middlewares = [thunkMiddleware, loggerMiddleware];
     const enhancer = process.env.NODE_ENV === 'production'
         ? compose(applyMiddleware(...middlewares))
         : composeWithDevTools(applyMiddleware(...middlewares));
