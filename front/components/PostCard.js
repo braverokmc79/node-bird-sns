@@ -68,6 +68,9 @@ const PostCard = ({ post }) => {
                 <Image />
 
             </Card >
+
+
+
             {commentFormOpened && (
                 <div>
 

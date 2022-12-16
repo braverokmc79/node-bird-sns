@@ -2,10 +2,23 @@ import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { PlusOutlined } from '@ant-design/icons';
 import ImagesZoom from "./ImagesZoom"
+import styled from 'styled-components';
 
+
+const ImgDiv = styled.div`
+    display:flex !important;
+    align-items: center;
+    max-height:430px;
+
+    & > img{
+     max-height:430px;
+    }
+`;
 
 
 const PostImages = ({ images }) => {
+
+
     const [showImageZoom, setShowImagesZoom] = useState(false);
 
     const onZoom = useCallback(() => {
@@ -21,20 +34,20 @@ const PostImages = ({ images }) => {
 
     if (images.length === 1) {
         return (
-            <>
+            <ImgDiv>
 
                 <img role="presentation" src={images[0].src} alt={images[0].src} onClick={onZoom} width="50%" />
                 {showImageZoom && <ImagesZoom images={images} onClose={onClose} />}
-            </>
+            </ImgDiv>
         )
     } else if (images.length === 2) {
         return (
             <>
-                <div>
+                <ImgDiv>
                     <img role="presentation" src={images[0].src} alt={images[0].src} onClick={onZoom} style={{ width: "50%" }} />
                     <img role="presentation" src={images[1].src} alt={images[1].src} onClick={onZoom} style={{ width: "50%" }} />
                     {showImageZoom && <ImagesZoom images={images} onClose={onClose} />}
-                </div>
+                </ImgDiv>
             </>
         )
 
@@ -42,7 +55,7 @@ const PostImages = ({ images }) => {
 
         return (
             <>
-                <div style={{ width: "100%" }}>
+                <ImgDiv style={{ width: "100%" }}>
                     <img role="presentation" src={images[0].src} alt={images[0].src}
                         onClick={onZoom} style={{ width: "50%", display: `${showImageZoom ? 'none' : "inline-block"}` }} />
 
@@ -61,7 +74,7 @@ const PostImages = ({ images }) => {
 
                         {showImageZoom && <ImagesZoom images={images} onClose={onClose} />}
                     </div>
-                </div>
+                </ImgDiv>
             </>
         );
     }

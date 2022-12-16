@@ -1,4 +1,4 @@
-import { all, fork, call, take, put, delay, debounce, throttle, takeLatest } from 'redux-saga/effects';
+import { all, fork, call, take, put, takeEvery, takeLatest, takeLeading, throttle, delay } from 'redux-saga/effects';
 import axios from 'axios';
 
 //1-1.로그인 처리
@@ -17,7 +17,8 @@ function* login(action) {
     //call 은 동기 함수 호출
     //fork 는 비동기 함수 호출
     try {
-        const result = yield call(logInAPI, action.data);
+        //const result = yield call(logInAPI, action.data);
+        yield delay(1000);
         yield put({
             type: 'LOG_IN_SUCCESS',
             data: result.data
@@ -29,12 +30,13 @@ function* login(action) {
         });
     }
 }
+
 //1-3 로그인 처리
 function* watchLogIn() {
     //LOG_IN 실행 될때 까지 기다리겠다.
-    yield take('LOG_IN_REQUEST', login);
-}
+    yield takeLatest('LOG_IN_REQUEST', login);
 
+}
 
 
 
@@ -50,10 +52,11 @@ function* logOut() {
     //call 은 동기 함수 호출
     //fork 는 비동기 함수 호출
     try {
-        const result = yield call(logOutAPI);
+        //const result = yield call(logOutAPI);
+        yield delay(1000);
         yield put({
             type: 'LOG_OUT_SUCCESS',
-            data: result.data
+            // data: result.data
         });
     } catch (err) {
         yield put({
@@ -65,12 +68,10 @@ function* logOut() {
 
 //2-3 로그아웃 처리
 function* watchLogOut() {
-    yield take('LOG_OUT_REQUEST', logOut);
+    while (true) {
+        yield takeEvery('LOG_OUT_REQUEST', logOut);
+    }
 }
-
-
-
-
 
 
 
@@ -83,7 +84,9 @@ function addPostAPI(data) {
 //3-2.
 function* addPost(action) {
     try {
-        const result = yield call(addPostAPI, action.data);
+        //const result = yield call(addPostAPI, action.data);
+        yield delay(1000);
+
         yield put({
             type: 'ADD_POST_SUCCESS',
             data: result.data
@@ -98,7 +101,7 @@ function* addPost(action) {
 
 //3-3
 function* watchAddPost() {
-    yield take('ADD_POST_REQUEST', addPost);
+    yield throttle('ADD_POST_REQUEST', addPost, 2000);
 }
 
 

@@ -80,7 +80,13 @@ export const Global = createGlobalStyle`
         display:inline-block;
     }
     .ant-card-cover{
-        transform:none !important;
+        transform:none !important;        
+    }
+
+    .ant-card-cover > div{
+        display:flex;
+        align-items: center;
+        max-height:450px
     }
 
     .slick-dots li button:before{
