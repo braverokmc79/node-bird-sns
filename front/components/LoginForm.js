@@ -3,8 +3,8 @@ import { Form, Input, Button } from 'antd';
 import styled from 'styled-components';
 import Link from 'next/link';
 import useInput from '../hooks/useInput';
-import { loginAction } from '../reducers/user';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginRequestAction } from './../reducers/user';
 
 
 const ButtonWrapper = styled.div`
@@ -19,13 +19,16 @@ const FormWrapper = styled(Form)`
 
 const LoginForm = () => {
     const dispatch = useDispatch();
+    const { isLoggingIn } = useSelector((state) => state.user);
+
     const [id, onChangeId] = useInput('');
     const [password, onChangePassword] = useInput('');
 
 
     const onSubmitForm = useCallback(() => {
-        dispatch(loginAction({ id, password }));
-    }, [id, password])
+        console.log("1.로그인 onSubmitForm dispatch  ");
+        dispatch(loginRequestAction({ id, password }));
+    }, [id, password]);
 
     return (
         <FormWrapper onFinish={onSubmitForm}>
@@ -46,7 +49,7 @@ const LoginForm = () => {
             </div>
 
             <ButtonWrapper >
-                <Button type="primary" htmlType='submit' loading={false} >로그인</Button>
+                <Button type="primary" htmlType='submit' loading={isLoggingIn} >로그인</Button>
                 <Link href="/signup" ><Button>회원가입</Button></Link>
             </ButtonWrapper>
 
