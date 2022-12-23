@@ -6,7 +6,7 @@ import useInput from '../hooks/useInput';
 
 
 const PostForm = () => {
-    const { imagePaths, addPostDone } = useSelector((state) => state.post);
+    const { imagePaths, addPostDone, addPostLoading } = useSelector((state) => state.post);
     const dispatch = useDispatch();
     const imageInput = useRef();
 
@@ -43,7 +43,7 @@ const PostForm = () => {
                 <input type="file" multiple hidden ref={imageInput} style={{ display: "none" }} />
 
                 <Button onClick={onClickImageUpload}>이미지 업로드</Button>
-                <Button type="primary" htmlType='submit' style={{ float: 'right' }} >짹짹</Button>
+                <Button type="primary" htmlType='submit' style={{ float: 'right' }} loading={addPostLoading}   >글작성</Button>
             </div>
             <div>
                 {

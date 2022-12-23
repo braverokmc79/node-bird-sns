@@ -1,9 +1,13 @@
 import { all, fork, put, throttle, delay, takeLatest } from 'redux-saga/effects';
+import shortId from 'shortid';
 import axios from 'axios';
 import {
     ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE,
-    ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE
+    ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE,
+    REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE
 } from '../reducers/post'
+import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
+
 
 
 //3-1.
@@ -17,10 +21,24 @@ function* addPost(action) {
         //const result = yield call(addPostAPI, action.data);
         yield delay(1000);
 
+
+        const id = shortId.generate();
         yield put({
             type: ADD_POST_SUCCESS,
-            data: action.data
+            data: {
+                id,
+                content: action.data
+            }
         });
+        console.log("1.게시글 등록  : ", id);
+
+        yield put({
+            type: ADD_POST_TO_ME,
+            data: id
+        })
+
+        console.log("2. 게시글 등록  : ", id);
+
     } catch (err) {
         yield put({
             type: ADD_POST_FAILURE,
@@ -34,6 +52,42 @@ function* watchAddPost() {
     //yield throttle('ADD_POST_REQUEST', addPost, 3000);
     yield takeLatest(ADD_POST_REQUEST, addPost);
 }
+
+
+
+
+//게시글 삭제
+function removePostAPI(data) {
+    return axios.post('/api/removepost', data);
+}
+function* removePost(action) {
+    try {
+        yield delay(1000);
+
+        yield put({
+            type: REMOVE_POST_SUCCESS,
+            data: action.data
+        });
+
+        yield put({
+            type: REMOVE_POST_OF_ME,
+            data: action.data
+        })
+
+    } catch (err) {
+        yield put({
+            type: REMOVE_POST_FAILURE,
+            error: err.response.data
+        });
+    }
+}
+
+function* watchRemovePost() {
+    yield takeLatest(REMOVE_POST_REQUEST, removePost);
+}
+
+
+
 
 
 
@@ -75,6 +129,7 @@ function* watchAddComment() {
 export default function* postSaga() {
     yield all([
         fork(watchAddPost),
-        fork(watchAddComment)
+        fork(watchAddComment),
+        fork(watchRemovePost)
     ]);
 }

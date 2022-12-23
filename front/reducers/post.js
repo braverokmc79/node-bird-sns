@@ -1,6 +1,6 @@
 import shortId from 'shortid';
 
-const initialState = {
+export const initialState = {
     mainPosts: [
         {
             id: 1,
@@ -10,16 +10,24 @@ const initialState = {
             },
             content: '첫 번째 게시글 #해시태그 #익스프레스',
             Images: [
-                { src: "https://cdn.pixabay.com/photo/2022/12/06/00/25/beach-7637946_960_720.jpg" },
-                { src: "https://cdn.pixabay.com/photo/2022/11/22/10/37/house-7609267_960_720.jpg" },
+                {
+                    id: shortId.generate(),
+                    src: "https://cdn.pixabay.com/photo/2022/12/06/00/25/beach-7637946_960_720.jpg"
+                },
+                {
+                    id: shortId.generate(),
+                    src: "https://cdn.pixabay.com/photo/2022/11/22/10/37/house-7609267_960_720.jpg"
+                },
             ],
             Comments: [{
+                id: shortId.generate(),
                 User: {
                     nickname: 'nero',
                 },
                 content: "우와 개정판이 나왔군요.~"
             },
             {
+                id: shortId.generate(),
                 User: {
                     nickname: 'hero',
                 },
@@ -36,17 +44,28 @@ const initialState = {
             },
             content: '첫 번째 게시글 #해시태그 #익스프레스',
             Images: [
-                { src: "https://cdn.pixabay.com/photo/2014/08/01/00/08/pier-407252_960_720.jpg" },
-                { src: "https://cdn.pixabay.com/photo/2015/01/28/23/35/hills-615429_960_720.jpg" },
-                { src: "https://cdn.pixabay.com/photo/2014/11/27/10/29/mountain-547363_960_720.jpg" }
+                {
+                    id: shortId.generate(),
+                    src: "https://cdn.pixabay.com/photo/2014/08/01/00/08/pier-407252_960_720.jpg"
+                },
+                {
+                    id: shortId.generate(),
+                    src: "https://cdn.pixabay.com/photo/2015/01/28/23/35/hills-615429_960_720.jpg"
+                },
+                {
+                    id: shortId.generate(),
+                    src: "https://cdn.pixabay.com/photo/2014/11/27/10/29/mountain-547363_960_720.jpg"
+                }
             ],
             Comments: [{
+                id: shortId.generate(),
                 User: {
                     nickname: 'nero',
                 },
                 content: "우와 개정판이 나왔군요.~"
             },
             {
+                id: shortId.generate(),
                 User: {
                     nickname: 'hero',
                 },
@@ -63,15 +82,20 @@ const initialState = {
             },
             content: '첫 번째 게시글 #해시태그 #익스프레스',
             Images: [
-                { src: "https://cdn.pixabay.com/photo/2022/12/06/00/25/beach-7637946_960_720.jpg" },
+                {
+                    id: shortId.generate(),
+                    src: "https://cdn.pixabay.com/photo/2022/12/06/00/25/beach-7637946_960_720.jpg"
+                },
             ],
             Comments: [{
+                id: shortId.generate(),
                 User: {
                     nickname: 'nero',
                 },
                 content: "우와 개정판이 나왔군요.~"
             },
             {
+                id: shortId.generate(),
                 User: {
                     nickname: 'hero',
                 },
@@ -86,6 +110,10 @@ const initialState = {
     addPostDone: false,
     addPostError: null,
 
+    removePostLoading: false,
+    removePostDone: false,
+    removePostError: null,
+
     addCommentLoading: false,
     addCommentDone: false,
     addCommentError: null
@@ -94,6 +122,12 @@ const initialState = {
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
+
+
+export const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST';
+export const REMOVE_POST_SUCCESS = 'REMOVE_POST_SUCCESS';
+export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
+
 
 export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
@@ -115,15 +149,14 @@ export const addComment = (data) => ({
 
 
 const dummyPost = (data) => ({
-    id: shortId.generate(),
-    content: data,
+    id: data.id,
+    content: data.content,
     User: {
         id: 1,
         nickname: '마카로닉스'
     },
     Images: [],
     Comments: []
-
 });
 
 const dummyComment = (data) => ({
@@ -161,6 +194,31 @@ const reducer = (state = initialState, action) => {
                 addPostLoading: false,
                 addPostError: action.error
             }
+
+        //글삭제
+        case REMOVE_POST_REQUEST:
+            return {
+                ...state,
+                removePostLoading: true,
+                removePostDone: false,
+                removePostError: null
+            };
+
+        case REMOVE_POST_SUCCESS:
+            return {
+                ...state,
+                mainPosts: state.mainPosts.filter((v) => v.id !== action.data),
+                removePostLoading: false,
+                removePostDone: true
+            }
+
+        case REMOVE_POST_FAILURE:
+            return {
+                ...state,
+                removePostLoading: false,
+                removePostError: action.error
+            }
+
 
         //댓글 작성
         case ADD_COMMENT_REQUEST:
