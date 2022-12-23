@@ -37,22 +37,22 @@ const AppLayout = ({ children }) => {
     return (
         <div>
             <Menu onClick={onClick} mode="horizontal" items={items} />
-            <Row gutter={24} className="mt-20">
-                <Col xs={24} md={6} className="text-center mt-20">
+            <Row gutter={24} style={{ marginTop: 20 }}>
+                <Col xs={24} md={6} style={{ marginTop: 20 }}>
                     Hello.Next
                 </Col>
             </Row>
-            <Row gutter={24} className="mt-20">
-                <Col xs={24} md={6} className="mt-20">
+            <Row gutter={24} style={{ marginTop: 20 }}>
+                <Col xs={24} md={6} style={{ marginTop: 20 }}>
                     {me ? <UserProfile /> : <LoginForm />}
                 </Col>
-                <Col xs={24} md={16} className="mt-20" >
+                <Col xs={24} md={16} style={{ marginTop: 20 }} >
                     {children}
                 </Col>
             </Row>
 
-            <Row gutter={24} className="mt-20">
-                <Col xs={24} md={24} className="text-center mt-20">
+            <Row gutter={24} style={{ marginTop: 20 }}>
+                <Col xs={24} md={24} style={{ marginTop: 20 }}>
                     <a href='https://macaronics.net' target="_blank" rel="noreferrer noopener"  >
                         Made by macaronics
                     </a>

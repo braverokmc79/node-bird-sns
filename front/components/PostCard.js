@@ -47,7 +47,7 @@ const PostCard = ({ post }) => {
         <div style={{ marginBottom: 50 }}>
             <Global />
 
-            <Card
+            <Card key={post.Image}
                 cover={post.Images[0] && <PostImages images={post.Images} />}
                 actions={[
                     <RetweetOutlined key="retweet" />,

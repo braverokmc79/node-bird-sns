@@ -9,7 +9,7 @@ const CommentForm = ({ post }) => {
     const dispatch = useDispatch();
 
     const id = useSelector((state) => state.user.me?.id);
-    const { addCommentDone } = useSelector((state) => state.post);
+    const { addCommentDone, addCommentLoading } = useSelector((state) => state.post);
     const [commentText, onChangeCommentText, setCommentText] = useInput('');
 
     useEffect(() => {
@@ -30,13 +30,14 @@ const CommentForm = ({ post }) => {
                 userId: id
             }
         })
-
     }, [commentText, id]);
 
     return (
         <Form onFinish={onSubmitComment}>
             <Input.TextArea value={commentText} onChange={onChangeCommentText} rows={4} />
-            <Button type="primary" htmlType='submit' style={{ marginTop: 10 }}>삐악</Button>
+            <Button type="primary" htmlType='submit'
+                loading={addCommentLoading}
+                style={{ marginTop: 10, float: "right", zIndex: 2 }}>삐악</Button>
         </Form>
     );
 };
