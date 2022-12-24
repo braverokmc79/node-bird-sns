@@ -77,7 +77,6 @@ const PostCard = ({ post }) => {
                     avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
                     title={post.User.nickname}
                     description={<PostCardContent postData={post.content} />}
-
                 />
                 <Image />
 

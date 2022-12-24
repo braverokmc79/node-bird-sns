@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useCallback } from 'react';
 import AppLayout from './../components/AppLayout';
 import { useSelector } from 'react-redux';
 import PostCard from './../components/PostCard';
@@ -9,10 +9,12 @@ const Index = () => {
     const { me } = useSelector((state) => state.user);
     const { mainPosts } = useSelector((state) => state.post);
 
+
+
     return (
         <AppLayout>
             {me && <PostForm />}
-            {mainPosts.map((post) => <PostCard key={post.id} post={post} />)}
+            {mainPosts && mainPosts.map((post) => <PostCard key={post.id} post={post} />)}
         </AppLayout>
     );
 };

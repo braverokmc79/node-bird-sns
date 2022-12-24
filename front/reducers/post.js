@@ -1,6 +1,8 @@
-import shortId from 'shortid';
+import shortid from 'shortid';
 import produce from 'immer';
+import { faker } from '@faker-js/faker';
 
+faker.seed(123);
 
 export const initialState = {
     mainPosts: [
@@ -13,23 +15,25 @@ export const initialState = {
             content: '첫 번째 게시글 #해시태그 #익스프레스',
             Images: [
                 {
-                    id: shortId.generate(),
-                    src: "https://cdn.pixabay.com/photo/2022/12/06/00/25/beach-7637946_960_720.jpg"
+                    id: shortid.generate(),
+                    src: "https://cdn.pixabay.com/photo/2022/12/06/00/25/beach-7637946_960_720.jpg",
+                    onerror: "https://via.placeholder.com/600x400"
                 },
                 {
-                    id: shortId.generate(),
-                    src: "https://cdn.pixabay.com/photo/2022/11/22/10/37/house-7609267_960_720.jpg"
+                    id: shortid.generate(),
+                    src: "https://cdn.pixabay.com/photo/2022/11/22/10/37/house-7609267_960_720.jpg",
+                    onerror: "https://via.placeholder.com/600x400"
                 },
             ],
             Comments: [{
-                id: shortId.generate(),
+                id: shortid.generate(),
                 User: {
                     nickname: 'nero',
                 },
                 content: "우와 개정판이 나왔군요.~"
             },
             {
-                id: shortId.generate(),
+                id: shortid.generate(),
                 User: {
                     nickname: 'hero',
                 },
@@ -47,27 +51,30 @@ export const initialState = {
             content: '첫 번째 게시글 #해시태그 #익스프레스',
             Images: [
                 {
-                    id: shortId.generate(),
-                    src: "https://cdn.pixabay.com/photo/2014/08/01/00/08/pier-407252_960_720.jpg"
+                    id: shortid.generate(),
+                    src: "https://cdn.pixabay.com/photo/2014/08/01/00/08/pier-407252_960_720.jpg",
+                    onerror: "https://via.placeholder.com/600x400"
                 },
                 {
-                    id: shortId.generate(),
-                    src: "https://cdn.pixabay.com/photo/2015/01/28/23/35/hills-615429_960_720.jpg"
+                    id: shortid.generate(),
+                    src: "https://cdn.pixabay.com/photo/2015/01/28/23/35/hills-615429_960_720.jpg",
+                    onerror: "https://via.placeholder.com/600x400"
                 },
                 {
-                    id: shortId.generate(),
-                    src: "https://cdn.pixabay.com/photo/2014/11/27/10/29/mountain-547363_960_720.jpg"
+                    id: shortid.generate(),
+                    src: "https://cdn.pixabay.com/photo/2014/11/27/10/29/mountain-547363_960_720.jpg",
+                    onerror: "https://via.placeholder.com/600x400"
                 }
             ],
             Comments: [{
-                id: shortId.generate(),
+                id: shortid.generate(),
                 User: {
                     nickname: 'nero',
                 },
                 content: "우와 개정판이 나왔군요.~"
             },
             {
-                id: shortId.generate(),
+                id: shortid.generate(),
                 User: {
                     nickname: 'hero',
                 },
@@ -75,7 +82,6 @@ export const initialState = {
             },
             ]
         },
-
         {
             id: 3,
             User: {
@@ -85,19 +91,20 @@ export const initialState = {
             content: '첫 번째 게시글 #해시태그 #익스프레스',
             Images: [
                 {
-                    id: shortId.generate(),
-                    src: "https://cdn.pixabay.com/photo/2022/12/06/00/25/beach-7637946_960_720.jpg"
+                    id: shortid.generate(),
+                    src: "https://cdn.pixabay.com/photo/2022/12/06/00/25/beach-7637946_960_720.jpg",
+                    onerror: "https://via.placeholder.com/600x400"
                 },
             ],
             Comments: [{
-                id: shortId.generate(),
+                id: shortid.generate(),
                 User: {
                     nickname: 'nero',
                 },
                 content: "우와 개정판이 나왔군요.~"
             },
             {
-                id: shortId.generate(),
+                id: shortid.generate(),
                 User: {
                     nickname: 'hero',
                 },
@@ -107,6 +114,7 @@ export const initialState = {
         },
 
     ],
+
     imagePaths: [],
     addPostLoading: false,
     addPostDone: false,
@@ -120,6 +128,31 @@ export const initialState = {
     addCommentDone: false,
     addCommentError: null
 }
+
+initialState.mainPosts = initialState.mainPosts.concat(
+    Array(20).fill().map((v, i) => ({
+        id: shortid.generate(),
+        User: {
+            id: shortid.generate(),
+            nickname: faker.internet.userName()
+        },
+        content: faker.lorem.paragraph(),
+        Images: [{
+            id: shortid.generate(),
+            src: 'https://picsum.photos/600/400?random=' + i,
+            onerror: "https://via.placeholder.com/600x400"
+        }],
+        Comments: [{
+            id: shortid.generate(),
+            User: {
+                nickname: faker.internet.userName()
+            },
+            content: faker.lorem.paragraph()
+        }]
+    }))
+)
+
+
 
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
@@ -162,7 +195,7 @@ const dummyPost = (data) => ({
 });
 
 const dummyComment = (data) => ({
-    id: shortId.generate(),
+    id: shortid.generate(),
     content: data,
     User: {
         id: 1,
