@@ -5,117 +5,14 @@ import { faker } from '@faker-js/faker';
 faker.seed(123);
 
 export const initialState = {
-    mainPosts: [
-        {
-            id: 1,
-            User: {
-                id: 1,
-                nickname: '마카로닉스'
-            },
-            content: '첫 번째 게시글 #해시태그 #익스프레스',
-            Images: [
-                {
-                    id: shortid.generate(),
-                    src: "https://cdn.pixabay.com/photo/2022/12/06/00/25/beach-7637946_960_720.jpg",
-                    onerror: "https://via.placeholder.com/600x400"
-                },
-                {
-                    id: shortid.generate(),
-                    src: "https://cdn.pixabay.com/photo/2022/11/22/10/37/house-7609267_960_720.jpg",
-                    onerror: "https://via.placeholder.com/600x400"
-                },
-            ],
-            Comments: [{
-                id: shortid.generate(),
-                User: {
-                    nickname: 'nero',
-                },
-                content: "우와 개정판이 나왔군요.~"
-            },
-            {
-                id: shortid.generate(),
-                User: {
-                    nickname: 'hero',
-                },
-                content: "얼른 사고 싶어요"
-            },
-            ]
-        },
-
-        {
-            id: 2,
-            User: {
-                id: 1,
-                nickname: '마카로닉스'
-            },
-            content: '첫 번째 게시글 #해시태그 #익스프레스',
-            Images: [
-                {
-                    id: shortid.generate(),
-                    src: "https://cdn.pixabay.com/photo/2014/08/01/00/08/pier-407252_960_720.jpg",
-                    onerror: "https://via.placeholder.com/600x400"
-                },
-                {
-                    id: shortid.generate(),
-                    src: "https://cdn.pixabay.com/photo/2015/01/28/23/35/hills-615429_960_720.jpg",
-                    onerror: "https://via.placeholder.com/600x400"
-                },
-                {
-                    id: shortid.generate(),
-                    src: "https://cdn.pixabay.com/photo/2014/11/27/10/29/mountain-547363_960_720.jpg",
-                    onerror: "https://via.placeholder.com/600x400"
-                }
-            ],
-            Comments: [{
-                id: shortid.generate(),
-                User: {
-                    nickname: 'nero',
-                },
-                content: "우와 개정판이 나왔군요.~"
-            },
-            {
-                id: shortid.generate(),
-                User: {
-                    nickname: 'hero',
-                },
-                content: "얼른 사고 싶어요"
-            },
-            ]
-        },
-        {
-            id: 3,
-            User: {
-                id: 1,
-                nickname: '마카로닉스'
-            },
-            content: '첫 번째 게시글 #해시태그 #익스프레스',
-            Images: [
-                {
-                    id: shortid.generate(),
-                    src: "https://cdn.pixabay.com/photo/2022/12/06/00/25/beach-7637946_960_720.jpg",
-                    onerror: "https://via.placeholder.com/600x400"
-                },
-            ],
-            Comments: [{
-                id: shortid.generate(),
-                User: {
-                    nickname: 'nero',
-                },
-                content: "우와 개정판이 나왔군요.~"
-            },
-            {
-                id: shortid.generate(),
-                User: {
-                    nickname: 'hero',
-                },
-                content: "얼른 사고 싶어요"
-            },
-            ]
-        },
-
-    ],
-
+    mainPosts: [],
     imagePaths: [],
+    hasMorePosts: true,
+
+    loadPostsLoading: false,
+    loadPostsDone: false,
+    loadPostsError: null,
+
     addPostLoading: false,
     addPostDone: false,
     addPostError: null,
@@ -129,44 +26,53 @@ export const initialState = {
     addCommentError: null
 }
 
-initialState.mainPosts = initialState.mainPosts.concat(
-    Array(20).fill().map((v, i) => ({
+
+export const generateDummyPost = (number) => Array(10).fill().map(() => ({
+    id: shortid.generate(),
+    User: {
+        id: shortid.generate(),
+        nickname: faker.internet.userName()
+    },
+    content: faker.lorem.paragraph(),
+    Images: [{
+        id: shortid.generate(),
+        src: 'https://picsum.photos/600/400?random=' + Math.floor(Math.random() * 1000) + 1,
+        onerror: "https://via.placeholder.com/600x400"
+    }],
+    Comments: [{
         id: shortid.generate(),
         User: {
-            id: shortid.generate(),
             nickname: faker.internet.userName()
         },
-        content: faker.lorem.paragraph(),
-        Images: [{
-            id: shortid.generate(),
-            src: 'https://picsum.photos/600/400?random=' + i,
-            onerror: "https://via.placeholder.com/600x400"
-        }],
-        Comments: [{
-            id: shortid.generate(),
-            User: {
-                nickname: faker.internet.userName()
-            },
-            content: faker.lorem.paragraph()
-        }]
-    }))
-)
+        content: faker.lorem.paragraph()
+    }]
+
+}));
+
+// initialState.mainPosts = initialState.mainPosts.concat(
+//     generateDummyPost(10)
+// )
 
 
+
+
+export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
+export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
+export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE';
 
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
 
-
 export const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST';
 export const REMOVE_POST_SUCCESS = 'REMOVE_POST_SUCCESS';
 export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
 
-
 export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
 export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
+
+
 
 
 export const addPost = (data) => ({
@@ -207,6 +113,26 @@ const dummyComment = (data) => ({
 const reducer = (state = initialState, action) => produce(state, (draft) => {
 
     switch (action.type) {
+
+        //무한 스크롤 
+        case LOAD_POSTS_REQUEST:
+            draft.loadPostsLoading = true;
+            draft.loadPostsDone = false;
+            draft.loadPostsError = null;
+            break;
+
+        case LOAD_POSTS_SUCCESS:
+            draft.loadPostsLoading = false;
+            draft.loadPostsDone = true;
+            draft.mainPosts = action.data.concat(draft.mainPosts);
+            draft.hasMorePosts = draft.mainPosts.length < 50;
+            break;
+
+        case LOAD_POSTS_FAILURE:
+            draft.loadPostsLoading = false;
+            draft.loadPostsError = action.error;
+            break;
+
 
         //글작성
         case ADD_POST_REQUEST:

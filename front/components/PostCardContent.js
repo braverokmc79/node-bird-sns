@@ -6,7 +6,7 @@ const PostCardContent = ({ postData }) => {
     //첫번째 게시글 #해시태그 #익스프레스
     return (
         <div>
-            {postData.split(/(#[^\s#]+)/g).map((v, index) => {
+            {postData && postData.split(/(#[^\s#]+)/g).map((v, index) => {
 
                 if (v.match(/(#[^\s#]+)/)) {
                     return <Link key={index} href={`/hashtag/${v.slice(1)}`}>{v}</Link>
