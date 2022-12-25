@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "react-nodebird",
+    "password": "1234",
+    "database": "react_nodebird",
+    "host": "127.0.0.1",
+    "post": "3306",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "react-nodebird",
+    "password": "1234",
+    "database": "react_nodebird",
+    "host": "127.0.0.1",
+    "post": "3306",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "react-nodebird",
+    "password": "1234",
+    "database": "react_nodebird",
+    "host": "127.0.0.1",
+    "post": "3306",
+    "dialect": "mysql"
+  }
+}
