@@ -9,6 +9,7 @@ import CommentForm from './CommentForm';
 import { createGlobalStyle } from 'styled-components';
 import PostCardContent from './PostCardContent';
 import { REMOVE_POST_REQUEST } from '../reducers/post';
+import FollowButton from './FollowButton';
 
 const Global = createGlobalStyle`
     .ant-card-actions{
@@ -57,6 +58,7 @@ const PostCard = ({ post }) => {
             }
         </div >
     );
+
     return (
         <div style={{ marginBottom: 50 }}>
             <Global />
@@ -68,10 +70,13 @@ const PostCard = ({ post }) => {
                     liked ? <HeartTwoTone key="heart" twoToneColor="#ebef96" onClick={onToggleLike} /> :
                         <HeartOutlined key="heart" onClick={onToggleLike} />,
                     <MessageOutlined key="comment" onClick={onToggleComment} />,
-                    <Popover content={content} title="" key="popover" style={{ textAlign: "center" }}>
+                    <Popover content={content} title="" key="popover" style={{ textAlign: "center" }}
+                    >
                         <EllipsisOutlined />
                     </Popover>
                 ]}
+
+                extra={id && <FollowButton post={post} />}
             >
                 <Card.Meta
                     avatar={<Avatar>{post.User.nickname[0]}</Avatar>}

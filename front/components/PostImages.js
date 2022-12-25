@@ -9,6 +9,7 @@ const ImgDiv = styled.div`
     display:flex !important;
     align-items: center;
     max-height:430px;
+    justify-content: space-between;
 
     & > img{
      max-height:430px;
@@ -35,8 +36,7 @@ const PostImages = ({ images }) => {
     if (images.length === 1) {
         return (
             <ImgDiv>
-
-                <img role="presentation" src={images[0].src} alt={images[0].src} onClick={onZoom} width="50%" />
+                <img role="presentation" src={images[0].src} alt={images[0].src} onClick={onZoom} width="49%" />
                 {showImageZoom && <ImagesZoom images={images} onClose={onClose} />}
             </ImgDiv>
         )
@@ -44,8 +44,8 @@ const PostImages = ({ images }) => {
         return (
             <>
                 <ImgDiv>
-                    <img role="presentation" src={images[0].src} alt={images[0].src} onClick={onZoom} style={{ width: "50%" }} />
-                    <img role="presentation" src={images[1].src} alt={images[1].src} onClick={onZoom} style={{ width: "50%" }} />
+                    <img role="presentation" src={images[0].src} alt={images[0].src} onClick={onZoom} style={{ width: "49%" }} />
+                    <img role="presentation" src={images[1].src} alt={images[1].src} onClick={onZoom} style={{ width: "49%" }} />
                     {showImageZoom && <ImagesZoom images={images} onClose={onClose} />}
                 </ImgDiv>
             </>
@@ -57,13 +57,13 @@ const PostImages = ({ images }) => {
             <>
                 <ImgDiv style={{ width: "100%" }}>
                     <img role="presentation" src={images[0].src} alt={images[0].src}
-                        onClick={onZoom} style={{ width: "50%", display: `${showImageZoom ? 'none' : "inline-block"}` }} />
+                        onClick={onZoom} style={{ width: "49%", display: `${showImageZoom ? 'none' : "inline-block"}` }} />
 
                     <div
                         role="presentation"
                         style={{
-                            display: 'inline-block', textAlign: 'center', width: "50%",
-                            verticalAlign: 'middle', position: "relative", top: "-50px"
+                            display: 'inline-block', textAlign: 'center', width: "49%",
+                            verticalAlign: 'middle', position: "relative", top: "-50px",
                         }}
                     >
                         <div onClick={onZoom} style={{ cursor: "pointer" }}>  <PlusOutlined /></div>

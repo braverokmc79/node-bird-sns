@@ -38,7 +38,13 @@ export const generateDummyPost = (number) => Array(10).fill().map(() => ({
         id: shortid.generate(),
         src: 'https://picsum.photos/600/400?random=' + Math.floor(Math.random() * 1000) + 1,
         onerror: "https://via.placeholder.com/600x400"
-    }],
+    },
+    {
+        id: shortid.generate(),
+        src: 'https://picsum.photos/600/400?random=' + Math.floor(Math.random() * 1000) + 1,
+        onerror: "https://via.placeholder.com/600x400"
+    }
+    ],
     Comments: [{
         id: shortid.generate(),
         User: {

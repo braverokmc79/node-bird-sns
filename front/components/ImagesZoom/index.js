@@ -53,7 +53,7 @@ const ImagesZoom = ({ images, onClose }) => {
                         })}
                     </Slick>
 
-                    <Indicator>
+                    <Indicator style={{ textAlign: 'center' }}>
                         <div>
                             {currentSlide + 1}
                             {' / '}

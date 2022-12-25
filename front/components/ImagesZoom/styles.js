@@ -58,8 +58,7 @@ export const ImageWrapper = styled.div`
 
 
 export const Indicator = styled.div`    
-    text-align :cetner;
-
+    text-align :cetner !important;
      & > div{
         width:75px;
         height:30px;
@@ -67,10 +66,10 @@ export const Indicator = styled.div`
         border-radius:15px;
         background:#313131;
         display:inline-block;
-        text-align:center;
+        text-align:center !important;
         top:60px;
         background:#fff;
-        position: relative;
+        position: relative;         
      }
 
 `;
