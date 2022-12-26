@@ -1,4 +1,4 @@
-import { all, fork, put, takeLatest, delay } from 'redux-saga/effects';
+import { all, fork, put, takeLatest, delay, call } from 'redux-saga/effects';
 import axios from 'axios';
 import {
     LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_IN_FAILURE,
@@ -153,19 +153,24 @@ function* watchLogOut() {
 
 
 //3. 회원가입
-function signUpAPI() {
-    return axios.post('/api/signup');
+function signUpAPI(data) {
+    console.log("2 사가 회원 가입   :", data);
+    return axios.post('http://localhost:3065/user', data);
 }
 
-function* signUp() {
+function* signUp(action) {
     try {
-        //const result = yield call(signUpAPI);
-        yield delay(1000);
-        //throw new Error('');
+
+
+        const result = yield call(signUpAPI(action.data));
+        //yield delay(1000);
+        console.log(" 회원 가입  : ", result);
+
         yield put({
             type: SIGN_UP_SUCCESS,
-            // data: result.data
         });
+
+
     } catch (err) {
         yield put({
             type: SIGN_UP_FAILURE,
@@ -183,8 +188,6 @@ function* watchSignUp() {
 
 
 
-
-
 //all 하면 한방에 배열로 적은 함수들이 실행처리 된다.
 //fork , call 로 실행한다. all 은 fork 나 call 을 동시에 실행시키도록 한다.
 //call 은 동기 함수 호출
@@ -194,7 +197,8 @@ export default function* userSaga() {
         fork(watchLogIn),
         fork(watchLogOut),
         fork(watchFollow),
-        fork(watchUnFollow)
+        fork(watchUnFollow),
+        fork(watchSignUp),
     ])
 }
 
