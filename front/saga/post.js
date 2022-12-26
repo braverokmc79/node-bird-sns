@@ -26,6 +26,7 @@ function loadPostsAPI(data) {
 function* loadPosts(action) {
     try {
         yield delay(1000);
+        console.log(" 무한 스크롤 : ");
 
         yield put({
             type: LOAD_POSTS_SUCCESS,

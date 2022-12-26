@@ -173,6 +173,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
 
         //회원가입
         case SIGN_UP_REQUEST:
+            console.log(" 회원 가입 리듀서 ");
             draft.signUpLoading = true;
             draft.signUpDone = false;
             draft.signUpError = null;

@@ -1,11 +1,14 @@
 import Head from 'next/head';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
+import Router from 'next/router';
 import AppLayout from '../components/AppLayout';
 import { Form, Input, Checkbox, Button } from 'antd';
 import useInput from '../hooks/useInput';
 import styled from 'styled-components';
 import { SIGN_UP_REQUEST } from './../reducers/user';
 import { useDispatch, useSelector } from 'react-redux';
+import { Formik } from "formik";
+import useSimpleValidation from "../components/Validation/UseSimpleValidation";
 
 const ErroMessage = styled.div`
     color:red;
@@ -13,21 +16,28 @@ const ErroMessage = styled.div`
 
 const SignUp = () => {
     const dispatch = useDispatch();
-    const { signUpLoading } = useSelector((state) => state.user);
+    const { signUpLoading, signUpDone, signUpError } = useSelector((state) => state.user);
+    const { schema } = useSimpleValidation();
+    const [joinState, setJoinState] = useState(true);
 
-    const [email, onChangeEmail] = useInput('');
-    const [nickname, onChangeNickname] = useInput('');
-    const [password, onChangePassword] = useInput('');
-    const [passwordCheck, setPasswordCheck] = useState('');
-    const [passwordError, setPasswordError] = useState(false);
+
+    useEffect(() => {
+        if (!joinState && signUpDone) {
+            setJoinState(true);
+            alert("회원 가입을 축하 합니다.");
+            Router.push('/');
+        }
+    }, [signUpDone]);
+
+    useEffect(() => {
+        if (signUpError) {
+            alert(signUpError);
+        }
+    }, [signUpError]);
+
+
     const [term, setTerm] = useState("");
     const [termError, setTermError] = useState(false);
-
-    const conChangePasswordCheck = useCallback((e) => {
-        setPasswordCheck(e.target.value);
-        setPasswordError(e.target.value !== password);
-    }, [password]);
-
 
     const onChangeTerm = useCallback((e) => {
         setTerm(e.target.checked);
@@ -35,71 +45,168 @@ const SignUp = () => {
     }, [])
 
 
-    const onSubmit = useCallback(() => {
-        if (password !== passwordCheck) {
-            return setPasswordError(true);
-        }
+    const onSubmit = useCallback((values) => {
+        console.log("submitForm  :", values);
+
         if (!term) {
             return setTermError(true);
         }
-        console.log(email, nickname, password);
+        setTimeout(() => {
+            let dataToSubmit = {
+                nickname: values.nickname,
+                email: values.email,
+                password: values.password
+            };
 
-        dispatch({
-            type: SIGN_UP_REQUEST,
-            data: { email, password, nickname }
-        })
-    }, [email, password, passwordCheck, term]);
+            dispatch({
+                type: SIGN_UP_REQUEST,
+                data: dataToSubmit
+            })
+            setJoinState(false);
+        }, 500);
 
+    }, [term]);
+
+
+    const initialValues = {
+        email: '',
+        nickname: '',
+        password: '',
+        passwordCheck: ''
+    };
 
     return (
-        <>
-            <AppLayout>
-                <Head>
-                    <title>회원 가입 | NodeBird</title>
-                </Head>
+
+        <Formik
+            initialValues={initialValues}
+            validationSchema={schema}
+            onSubmit={onSubmit}
+        >
+            {props => {
+                const {
+                    values,
+                    touched,
+                    errors,
+                    dirty,
+                    isSubmitting,
+                    handleChange,
+                    handleBlur,
+                    handleSubmit,
+                    handleReset,
+                    isValid
+                } = props;
+                return (
+
+                    <>
+                        <AppLayout>
+                            <Head>
+                                <title>회원 가입 | NodeBird</title>
+                            </Head>
+
+                            <Form onFinish={handleSubmit}>
+                                <div>
+                                    <label htmlFor="email">이메일</label>
+                                    <br />
+                                    <Input name="email" id="email" type='email'
+                                        value={values.email}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        className={
+                                            [
+                                                "input",
+                                                errors.email && touched.email ? "input-error" : null
+                                            ].join(" ")
+                                        }
+
+                                    />
+
+                                    {errors.email && touched.email && (
+                                        <span className="error">{errors.email}</span>
+                                    )}
+                                </div>
 
 
-                <Form onFinish={onSubmit}>
-                    <div>
-                        <label htmlFor="user-email">이메일</label>
-                        <br />
-                        <Input name="user-email" type='email' value={email} require="true" onChange={onChangeEmail} />
-                    </div>
+                                <div>
+                                    <label htmlFor="nickname">닉네임</label>
+                                    <br />
+                                    <Input name="nickname" id="nickname"
+                                        value={values.nickname}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        className={
+                                            [
+                                                "input",
+                                                errors.nickname && touched.nickname ? 'input-error' : null
+                                            ].join(" ")
+                                        }
+                                        require="true" />
+                                    {errors.nickname && touched.nickname && (
+                                        <span className="error">{errors.nickname}</span>
+                                    )}
+                                </div>
 
 
-                    <div>
-                        <label htmlFor="user-nickname">닉네임</label>
-                        <br />
-                        <Input name="user-nickname" value={nickname} require="true" onChange={onChangeNickname} />
-                    </div>
+                                <div>
+                                    <label htmlFor="password">비밀번호</label>
+                                    <br />
+                                    <Input name="password" id="password" type="password" require="true"
+                                        value={values.password}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        className={
+                                            [
+                                                "input",
+                                                errors.password && touched.password ? 'input-error' : null
+                                            ].join(" ")
+                                        }
+                                    />
 
+                                    {errors.password && touched.password && (
+                                        <span className="error">{errors.password}</span>
+                                    )}
+                                </div>
 
-                    <div>
-                        <label htmlFor="user-password">비밀번호</label>
-                        <br />
-                        <Input name="user-password" type="password" value={password} require="true" onChange={onChangePassword} />
-                    </div>
+                                <div>
+                                    <br />
+                                    <label htmlFor="passwordCheck">비밀번호 확인</label>
+                                    <Input name="passwordCheck" id="passwordCheck" type="password"
+                                        value={values.passwordCheck}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        className={
+                                            [
+                                                "input",
+                                                errors.passwordCheck && touched.passwordCheck ? 'input-error' : null
+                                            ].join(" ")
+                                        }
+                                    />
+                                    {errors.passwordCheck && touched.passwordCheck && (
+                                        <span className="error">{errors.passwordCheck}</span>
+                                    )}
+                                </div>
 
-                    <div>
-                        <br />
-                        <label htmlFor="user-passwordCheck">비밀번호</label>
-                        <Input name="user-passwordCheck" type="password" value={passwordCheck} require="true" onChange={conChangePasswordCheck} />
-                    </div>
+                                {/* 
+                                {passwordError && <ErroMessage>비밀번호가 일치하지 않습니다.</ErroMessage>} */
+                                }
 
-                    {passwordError && <ErroMessage>비밀번호가 일치하지 않습니다.</ErroMessage>}
+                                <Checkbox name="user-term" checked={term} onChange={onChangeTerm}>
+                                    동의합니다.
+                                </Checkbox>
+                                {termError && <div style={{ color: 'red' }}>약관에 동의하셔야 합니다.</div>}
 
-                    <Checkbox name="user-term" checked={term} onChange={onChangeTerm}>
-                        동의합니다.
-                    </Checkbox>
-                    {termError && <div style={{ color: 'red' }}>약관에 동의하셔야 합니다.</div>}
+                                <div style={{ marginTop: 10 }}>
+                                    <Button type="primary" htmlType='submit' loading={signUpLoading}>가입하기</Button>
+                                </div>
 
-                    <div style={{ marginTop: 10 }}>
-                        <Button type="primary" htmlType='submit' loading={signUpLoading}>가입하기</Button>
-                    </div>
+                            </Form>
+                        </AppLayout>
+                    </>
 
-                </Form>
-            </AppLayout>
-        </>
+                );
+            }}
+
+        </Formik >
+
     );
 };
 

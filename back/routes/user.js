@@ -24,7 +24,7 @@ router.post('/', async (req, res, next) => {
         });
 
         if (exUser) {
-            return res.status(403).send('이미 사용중인 아이디입니다.');
+            return res.status(403).send('이미 사용중인 아이디 입니다.');
         }
 
         const hashedPassword = await bcrypt.hash(req.body.password, 12);
@@ -34,7 +34,10 @@ router.post('/', async (req, res, next) => {
             password: hashedPassword
         });
 
+        //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3060'); //특정서버
+        // res.setHeader('Access-Control-Allow-Origin', '*'); //모든서버
         res.status(201).send('ok');
+
     } catch (error) {
         console.error(" 회원 가입 error : ", error);
         next(error); //status 500

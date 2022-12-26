@@ -1,4 +1,4 @@
-import { all, fork, put, takeLatest, delay, call } from 'redux-saga/effects';
+import { all, fork, put, takeLatest, delay, call, throttle } from 'redux-saga/effects';
 import axios from 'axios';
 import {
     LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_IN_FAILURE,
@@ -139,9 +139,7 @@ function* logOut() {
 
 //2-3 로그아웃 처리
 function* watchLogOut() {
-    while (true) {
-        yield takeLatest(LOG_OUT_REQUEST, logOut);
-    }
+    yield takeLatest(LOG_OUT_REQUEST, logOut);
 }
 
 
@@ -154,15 +152,12 @@ function* watchLogOut() {
 
 //3. 회원가입
 function signUpAPI(data) {
-    console.log("2 사가 회원 가입   :", data);
     return axios.post('http://localhost:3065/user', data);
 }
 
 function* signUp(action) {
     try {
-
-
-        const result = yield call(signUpAPI(action.data));
+        const result = yield call(signUpAPI, action.data);
         //yield delay(1000);
         console.log(" 회원 가입  : ", result);
 
@@ -170,8 +165,8 @@ function* signUp(action) {
             type: SIGN_UP_SUCCESS,
         });
 
-
     } catch (err) {
+        console.log(" 사가 에러 : ", err.response.data);
         yield put({
             type: SIGN_UP_FAILURE,
             error: err.response.data
@@ -179,11 +174,11 @@ function* signUp(action) {
     }
 }
 
+
 function* watchSignUp() {
-    while (true) {
-        yield takeLatest(SIGN_UP_REQUEST, signUp);
-    }
+    yield takeLatest(SIGN_UP_REQUEST, signUp);
 }
+
 
 
 

@@ -13,3 +13,16 @@
 }
 
 
+.input-error {
+    width: 100%;
+    border-color: #e63946;
+ }
+
+.error {
+    color:#e63946;
+    margin-top: 0.3rem;
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
