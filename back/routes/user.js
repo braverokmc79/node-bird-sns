@@ -1,5 +1,5 @@
 const express = require('express');
-const { User } = require('../models');
+const { User, Post } = require('../models');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const router = express.Router();
@@ -8,35 +8,48 @@ const router = express.Router();
 //POST  /user/login
 router.post('/login', (req, res, next) => {
 
-    console.log("로그인  ", req.body);
-
     passport.authenticate('local', (err, user, info) => {
-
         if (err) {
             console.error(err);
             console.error("1.로그인 에러 ", err);
             next(err);
         }
-        //현재 info 가 존재하면 클라이언트 에러
+
+        //현재 info 가 존재하면 클라이언트 에러 메시지 반환처리
         //info  예  => { reason: '존재하지 않는 사용자입니다.' } { reason: '비밀번호가 틀렸습니다.' }
         if (info) {
             //401 허가되지 않음 403 금지
             return res.status(401).send(info.reason);
         }
 
-
-        console.log("3 passport .req.login  실행  : ", user);
-
         return req.login(user, async (loginErr) => {
-            console.log("로그인 처리 ");
 
             if (loginErr) {
-                console.error("2.로그인 에러 ", loginErr);
                 return next(loginErr);
             }
 
-            console.log("로그인 성공 :  ", user);
-            return res.status(200).json(user)
+            const fullUserWithoutPassword = await User.findOne({
+                where: {
+                    id: user.id
+                },
+                //원하는 정보만 attributes: ['id', 'nickname', 'email'],
+                attributes: {
+                    exclude: ['password']
+                },
+                include: [{
+                    model: Post
+                }, {
+                    model: User,
+                    as: "Followers"
+                },
+                {
+                    model: User,
+                    as: "Followings"
+                }
+                ]
+            })
+
+            return res.status(200).json(fullUserWithoutPassword)
         });
 
     })(req, res, next);
@@ -47,11 +60,15 @@ router.post('/login', (req, res, next) => {
 
 //로그아웃
 router.post('/logout', (req, res, next) => {
-    console.log(" 로그 아웃웃");
-    req.logout();
-    req.session.destroy();
-    res.send('ok');
+    req.logout(function (err) {
+        if (err) { return next(err); }
+        req.session.destroy();
+        res.send('ok')
+    });
+
 });
+
+
 
 
 router.post('/', async (req, res, next) => {

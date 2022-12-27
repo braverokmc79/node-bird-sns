@@ -82,7 +82,7 @@ function* login(action) {
     //call 은 동기 함수 호출
     //fork 는 비동기 함수 호출
     try {
-        console.log(" 로그인 처리  login  ", action.data);
+
         const result = yield call(logInAPI, action.data);
         //yield delay(1000);
 
@@ -116,20 +116,23 @@ function* watchLogIn() {
 
 //2-1.로그아웃 처리
 function logOutAPI() {
-    return axios.post('/api/logout');
+    console.log(" 로그 아웃 !");
+    return axios.post('/user/logout');
 }
 
+
+
 //2-2.로그아웃 처리
-function* logOut() {
+function* logOut(action) {
     //put 을 dispatch
     //call 은 동기 함수 호출
     //fork 는 비동기 함수 호출
     try {
-        //const result = yield call(logOutAPI);
-        yield delay(1000);
+
+        yield call(logOutAPI);
+
         yield put({
-            type: LOG_OUT_SUCCESS,
-            // data: result.data
+            type: LOG_OUT_SUCCESS
         });
     } catch (err) {
         yield put({

@@ -14,15 +14,7 @@ const SearchInput = styled(Input.Search)`
     vertical-align: 'middle' ;
 `;
 
-const items = [
-    { label: <Link href="/">노드버드</Link>, key: 'item-1' },
-    { label: <Link href="/profile">프로필</Link>, key: 'item-2' },
-    {
-        label: <SearchInput enterButton />,
-        key: 'item-3'
-    },
-    { label: <Link href="/signup">회원가입</Link>, key: 'item-4' },
-];
+
 
 const AppLayout = ({ children }) => {
 
@@ -32,6 +24,16 @@ const AppLayout = ({ children }) => {
         console.log('click ', e);
         //setCurrent(e.key);
     }, []);
+
+    const items = [
+        { label: <Link href="/">노드버드</Link>, key: 'item-1' },
+        me && { label: <Link href="/profile">프로필</Link>, key: 'item-2' },
+        {
+            label: <SearchInput enterButton />,
+            key: 'item-3'
+        },
+        !me && { label: <Link href="/signup">회원가입</Link>, key: 'item-4' },
+    ];
 
 
     return (

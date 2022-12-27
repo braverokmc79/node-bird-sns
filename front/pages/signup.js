@@ -16,16 +16,23 @@ const ErroMessage = styled.div`
 
 const SignUp = () => {
     const dispatch = useDispatch();
-    const { signUpLoading, signUpDone, signUpError } = useSelector((state) => state.user);
+    const { signUpLoading, signUpDone, signUpError, me } = useSelector((state) => state.user);
     const { schema } = useSimpleValidation();
     const [joinState, setJoinState] = useState(true);
+
+
+    useEffect(() => {
+        if (me && me.id) {
+            Router.replace("/");
+        }
+    }, [me && me.id]);
 
 
     useEffect(() => {
         if (!joinState && signUpDone) {
             setJoinState(true);
             alert("회원 가입을 축하 합니다.");
-            Router.push('/');
+            Router.replace('/');
         }
     }, [signUpDone]);
 
