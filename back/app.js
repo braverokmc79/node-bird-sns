@@ -66,6 +66,15 @@ app.use('/user', userRouter);
 
 
 
+
+
+//에러처리 미들웨어
+// app.use((err, req, res, next) => {
+
+// });
+
+
+
 app.listen(3065, () => {
     console.log("서버 실행 중");
 });

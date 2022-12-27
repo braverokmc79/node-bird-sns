@@ -3,10 +3,13 @@ const { User, Post } = require('../models');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const router = express.Router();
+const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
+
+
 
 //passport.authenticate 미들웨어는 (req, res, next) 사용할수 없는 미들웨어인데 다음과 미들웨어 확장 같은 설정으로 사용
 //POST  /user/login
-router.post('/login', (req, res, next) => {
+router.post('/login', isNotLoggedIn, (req, res, next) => {
 
     passport.authenticate('local', (err, user, info) => {
         if (err) {
@@ -59,7 +62,7 @@ router.post('/login', (req, res, next) => {
 
 
 //로그아웃
-router.post('/logout', (req, res, next) => {
+router.post('/logout', isLoggedIn, (req, res, next) => {
     req.logout(function (err) {
         if (err) { return next(err); }
         req.session.destroy();
@@ -71,7 +74,7 @@ router.post('/logout', (req, res, next) => {
 
 
 
-router.post('/', async (req, res, next) => {
+router.post('/', isNotLoggedIn, async (req, res, next) => {
 
     try {
         console.log(" 백엔드 : ", req.body);
