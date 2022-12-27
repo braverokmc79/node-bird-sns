@@ -6,6 +6,42 @@ const router = express.Router();
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 
+//브라우저에서 새로고침 할때마다 요청처리 된다.
+router.get('/', async (req, res, next) => {
+    try {
+        if (req.user) {
+            const fullUserWithoutPassword = await User.findOne({
+                where: {
+                    id: req.user.id
+                },
+                attributes: {
+                    exclude: ['password']
+                },
+                include: [{
+                    model: Post,
+                    attributes: ['id'],
+                }, {
+                    model: User,
+                    as: "Followers",
+                    attributes: ['id'],
+                },
+                {
+                    model: User,
+                    as: "Followings",
+                    attributes: ['id'],
+                }
+                ]
+            })
+            res.status(200).json(fullUserWithoutPassword);
+        } else {
+            res.status(200).json(null);
+        }
+    } catch (error) {
+        console.error("/ 쿠키 정보 가져오기 에러 :  ", error);
+        next(error);
+    }
+});
+
 
 //passport.authenticate 미들웨어는 (req, res, next) 사용할수 없는 미들웨어인데 다음과 미들웨어 확장 같은 설정으로 사용
 //POST  /user/login
@@ -37,17 +73,21 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
                 },
                 //원하는 정보만 attributes: ['id', 'nickname', 'email'],
                 attributes: {
-                    exclude: ['password']
+                    exclude: ['password'],
+
                 },
                 include: [{
-                    model: Post
+                    model: Post,
+                    attributes: ['id']
                 }, {
                     model: User,
-                    as: "Followers"
+                    as: "Followers",
+                    attributes: ['id']
                 },
                 {
                     model: User,
-                    as: "Followings"
+                    as: "Followings",
+                    attributes: ['id']
                 }
                 ]
             })

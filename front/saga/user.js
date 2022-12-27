@@ -6,7 +6,36 @@ import {
     SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE,
     FOLLOW_REQUEST, FOLLOW_SUCCESS, FOLLOW_FAILURE,
     UNFOLLOW_REQUEST, UNFOLLOW_SUCCESS, UNFOLLOW_FAILURE,
+    LOAD_MY_INFO_REQUEST, LOAD_MY_INFO_SUCCESS, LOAD_MY_INFO_FAILURE
 } from '../reducers/user';
+
+
+
+//브라우저 새로고침시  유저정보 가져오기
+function loadMyInfoAPI() {
+    return axios.get('/user');
+}
+function* loadMyInfo(action) {
+    try {
+        const result = yield call(loadMyInfoAPI)
+
+        yield put({
+            type: LOAD_MY_INFO_SUCCESS,
+            data: result.data
+        });
+
+    } catch (err) {
+        yield put({
+            type: LOAD_MY_INFO_FAILURE,
+            error: err.response.data
+        });
+    }
+}
+function* watchLoadMyInfo() {
+    yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
+}
+
+
 
 
 
@@ -199,6 +228,7 @@ export default function* userSaga() {
         fork(watchFollow),
         fork(watchUnFollow),
         fork(watchSignUp),
+        fork(watchLoadMyInfo),
     ])
 }
 

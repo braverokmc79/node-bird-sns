@@ -5,11 +5,9 @@ export const initialState = {
     unfollowDone: false,
     unfollowError: null,
 
-
     followLoading: false,//팔로우 시도중
     followDone: false,
     followError: null,
-
 
     logInLoading: false,//로그인 시도중
     logInDone: false,
@@ -26,6 +24,10 @@ export const initialState = {
     changeNicknameLoading: false, //닉네임 변경
     changeNicknameDone: false,
     changeNicknameError: null,
+
+    loadMyInfoLoading: false, //브라우저 새로고침시  유저정보 가져오기
+    loadMyInfoDone: false,
+    loadMyInfoError: null,
 
     me: null,
     signUpdata: {},
@@ -49,7 +51,6 @@ export const CHANGE_NICKNAME_REQUEST = "CHANGE_NICKNAME_REQUEST";
 export const CHANGE_NICKNAME_SUCCESS = "CHANGE_NICKNAME_SUCCESS";
 export const CHANGE_NICKNAME_FAILURE = "CHANGE_NICKNAME_FAILURE";
 
-
 export const FOLLOW_REQUEST = "FOLLOW_REQUEST";
 export const FOLLOW_SUCCESS = "FOLLOW_SUCCESS";
 export const FOLLOW_FAILURE = "FOLLOW_FAILURE";
@@ -58,9 +59,13 @@ export const UNFOLLOW_REQUEST = "UNFOLLOW_REQUEST";
 export const UNFOLLOW_SUCCESS = "UNFOLLOW_SUCCESS";
 export const UNFOLLOW_FAILURE = "UNFOLLOW_FAILURE";
 
-
 export const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
 export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
+
+export const LOAD_MY_INFO_REQUEST = "LOAD_MY_INFO_REQUEST";
+export const LOAD_MY_INFO_SUCCESS = "LOAD_MY_INFO_SUCCESS";
+export const LOAD_MY_INFO_FAILURE = "LOAD_MY_INFO_FAILURE";
+
 
 
 const dummyUser = (data) => ({
@@ -92,6 +97,25 @@ export const logoutRequestAction = () => {
 const reducer = (state = initialState, action) => produce(state, (draft) => {
 
     switch (action.type) {
+
+        //브라우저 새로고침시  유저정보 가져오기
+        case LOAD_MY_INFO_REQUEST:
+            draft.loadMyInfoLoading = true;
+            draft.loadMyInfoDone = false;
+            draft.loadMyInfoError = null;
+            break;
+
+        case LOAD_MY_INFO_SUCCESS:
+            draft.loadMyInfoLoading = false;
+            draft.loadMyInfoDone = true;
+            draft.me=action.data
+            break;
+
+        case LOAD_MY_INFO_FAILURE:
+            draft.loadMyInfoLoading = false;
+            draft.loadMyInfoError = action.error;
+            break;
+
 
         //팔로우
         case FOLLOW_REQUEST:
