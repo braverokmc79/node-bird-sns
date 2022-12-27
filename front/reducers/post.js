@@ -79,8 +79,6 @@ export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
 export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
 
 
-
-
 export const addPost = (data) => ({
     type: ADD_POST_REQUEST,
     data
@@ -91,7 +89,6 @@ export const addComment = (data) => ({
     type: ADD_COMMENT_REQUEST,
     data
 });
-
 
 
 
@@ -150,7 +147,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         case ADD_POST_SUCCESS:
             draft.addPostLoading = false;
             draft.addPostDone = true;
-            draft.mainPosts.unshift(dummyPost(action.data));
+            draft.mainPosts.unshift(action.data);
             break;
 
         case ADD_POST_FAILURE:
@@ -189,8 +186,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
 
 
         case ADD_COMMENT_SUCCESS: {
-            const post = draft.mainPosts.find((v) => v.id === action.data.postId);
-            post.Comments.unshift(dummyComment(action.data.content));
+            const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
+            post.Comments.unshift(action.data);
             draft.addCommentLoading = false;
             draft.addCommentDone = true;
             break;

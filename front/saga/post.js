@@ -1,4 +1,4 @@
-import { all, fork, put, throttle, delay, takeLatest } from 'redux-saga/effects';
+import { all, fork, put, throttle, delay, takeLatest, call } from 'redux-saga/effects';
 import shortId from 'shortid';
 import axios from 'axios';
 import {
@@ -51,34 +51,29 @@ function* watchLoadPosts() {
 
 
 
-//3-1.
+//3-1. 글작성
 function addPostAPI(data) {
-    return axios.post('/api/post', data);
+    return axios.post('/post', { content: data });
 }
 
 //3-2.
 function* addPost(action) {
     try {
-        //const result = yield call(addPostAPI, action.data);
-        yield delay(1000);
+        const result = yield call(addPostAPI, action.data);
 
+        console.log("2. 게시글 등록 후 반환 : ", result);
 
-        const id = shortId.generate();
         yield put({
             type: ADD_POST_SUCCESS,
-            data: {
-                id,
-                content: action.data
-            }
+            data: result.data
         });
-        console.log("1.게시글 등록  : ", id);
 
         yield put({
             type: ADD_POST_TO_ME,
-            data: id
+            data: result.data.id
         })
 
-        console.log("2. 게시글 등록  : ", id);
+
 
     } catch (err) {
         yield put({
@@ -136,17 +131,18 @@ function* watchRemovePost() {
 
 //댓글
 function addCommentAPI(data) {
-    return axios.Comment('/api/comment', data);
+    return axios.Comment(`/post/${data.postId}/comment`, data); //POST post/1/comment
 }
 
 function* addComment(action) {
     try {
-        //const result =yield call(addCommentAPI, action.data);
-        yield delay(1000);
+        const result = yield call(addCommentAPI, action.data);
+
         yield put({
             type: ADD_COMMENT_SUCCESS,
-            data: action.data
+            data: result.data
         });
+
     } catch (err) {
         yield put({
             type: ADD_COMMENT_FAILURE,
