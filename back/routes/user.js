@@ -1,15 +1,42 @@
 const express = require('express');
 const { User } = require('../models');
 const bcrypt = require('bcrypt');
-
+const passport = require('passport');
 const router = express.Router();
 
+//passport.authenticate 미들웨어는 (req, res, next) 사용할수 없는 미들웨어인데 다음과 미들웨어 확장 같은 설정으로 사용
+//POST  /user/login
+router.post('/login', (req, res, next) => {
 
-router.get('/', (req, res) => {
-    // User.create
-    console.log(" get 백엔드 : ", req.body);
-    res.json({ success: true })
+    console.log("로그인  ", req.body);
+
+    passport.authenticate('local', (err, user, info) => {
+        if (err) {
+            console.error(err);
+            console.error("1.로그인 에러 ", err);
+            next(err);
+        }
+        //현재 info 가 존재하면 클라이언트 에러
+        //info  예  => { reason: '존재하지 않는 사용자입니다.' } { reason: '비밀번호가 틀렸습니다.' }
+        if (info) {
+            //401 허가되지 않음 403 금지
+            return res.status(401).send(info.reason);
+        }
+
+        return req.login(user, async (loginErr) => {
+            if (loginErr) {
+                console.error("2.로그인 에러 ", loginErr);
+                return next(loginErr);
+            }
+
+            return res.json(user)
+        });
+
+    })(req, res, next);
+
 });
+
+
 
 
 router.post('/', async (req, res, next) => {
