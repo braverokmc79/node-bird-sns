@@ -12,7 +12,7 @@ module.exports = () => {
 
 
     //user id 를 통해 user 정보를 가져온다.
-    passport.deserializeUser(async () => {
+    passport.deserializeUser(async (id, done) => {
         try {
             const user = await User.findOne({ where: { id } })
             done(null, user); //req.user 저장

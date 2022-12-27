@@ -1,8 +1,7 @@
 const express = require('express');
-const { Post } = require('../models');
+const { Post, User, Image, Comment } = require('../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const router = express.Router();
-
 
 
 //** passport 특성상 로그인 하면, 라우터 접근시 항상 deserializeUser 실행해서 req.user 를 만든다.  req.user.id로 접근해서 정보를 가져올 수 있다.
@@ -13,7 +12,22 @@ router.post('/', isLoggedIn, async (req, res, next) => {
             content: req.body.content,
             UserId: req.user.id
         });
-        res.status(201).json(post);
+
+        const fullPost = await Post.findOne({
+            where: { id: post.id },
+            include: [{
+                model: Image,
+            },
+            {
+                model: Comment
+            }, {
+                model: User,
+            }
+            ]
+        })
+
+
+        res.status(201).json(fullPost);
     } catch (error) {
         console.error(" Post 에러 :  ", error);
         next(error);

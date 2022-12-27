@@ -6,7 +6,7 @@ import useInput from '../hooks/useInput';
 
 
 const PostForm = () => {
-    const { imagePaths, addPostDone, addPostLoading } = useSelector((state) => state.post);
+    const { imagePaths, addPostDone, addPostLoading, addPostError } = useSelector((state) => state.post);
     const dispatch = useDispatch();
     const imageInput = useRef();
 
@@ -18,6 +18,11 @@ const PostForm = () => {
         }
     }, [addPostDone])
 
+    useEffect(()=>{
+        if(addPostError){
+            alert(addPostError);
+        }
+    },[addPostError])
 
     const onSubmit = useCallback(() => {
         dispatch(addPost(text));

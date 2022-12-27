@@ -22,9 +22,12 @@ db.sequelize.sync()
 
 app.use(cors({
     //origin: 'https://nodebird.com'
-    origin: true, // orign: true 로 설정해두면 * 대신 보낸 곳의 주소가 자동으로 들어가 편리합니다.
-    credentials: false
+    // origin: true, // orign: true 로 설정해두면 * 대신 보낸 곳의 주소가 자동으로 들어가 편리합니다.
+    origin: "http://localhost:3060",
+    credentials: true
 }));
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
