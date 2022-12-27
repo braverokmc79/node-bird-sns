@@ -82,7 +82,7 @@ function* login(action) {
     //call 은 동기 함수 호출
     //fork 는 비동기 함수 호출
     try {
-
+        console.log(" 로그인 처리  login  ", action.data);
         const result = yield call(logInAPI, action.data);
         //yield delay(1000);
 

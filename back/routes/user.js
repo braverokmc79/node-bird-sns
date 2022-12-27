@@ -11,6 +11,7 @@ router.post('/login', (req, res, next) => {
     console.log("로그인  ", req.body);
 
     passport.authenticate('local', (err, user, info) => {
+
         if (err) {
             console.error(err);
             console.error("1.로그인 에러 ", err);
@@ -23,13 +24,19 @@ router.post('/login', (req, res, next) => {
             return res.status(401).send(info.reason);
         }
 
+
+        console.log("3 passport .req.login  실행  : ", user);
+
         return req.login(user, async (loginErr) => {
+            console.log("로그인 처리 ");
+
             if (loginErr) {
                 console.error("2.로그인 에러 ", loginErr);
                 return next(loginErr);
             }
 
-            return res.json(user)
+            console.log("로그인 성공 :  ", user);
+            return res.status(200).json(user)
         });
 
     })(req, res, next);
@@ -37,6 +44,14 @@ router.post('/login', (req, res, next) => {
 });
 
 
+
+//로그아웃
+router.post('/logout', (req, res, next) => {
+    console.log(" 로그 아웃웃");
+    req.logout();
+    req.session.destroy();
+    res.send('ok');
+});
 
 
 router.post('/', async (req, res, next) => {

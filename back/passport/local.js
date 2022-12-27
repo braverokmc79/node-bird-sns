@@ -5,6 +5,7 @@ const { User } = require('../models');
 
 
 module.exports = () => {
+    console.log(" passport local.js module.exports ");
     passport.use(new LocalStrategey({
         usernameField: 'email',
         passwordField: 'password',
@@ -21,6 +22,8 @@ module.exports = () => {
             }
 
             const result = await bcrypt.compare(password, user.password);
+
+
             if (!result) {
                 return done(null, false, { reason: '비밀번호가 틀렸습니다.' });
             }
