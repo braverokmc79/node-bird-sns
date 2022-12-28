@@ -1,6 +1,4 @@
 const express = require('express');
-const postRouter = require('./routes/posts');
-const userRouter = require('./routes/user');
 const cors = require('cors');
 const db = require('./models');
 const passportConfig = require('./passport');
@@ -8,6 +6,10 @@ const passport = require('passport');
 const session = require("express-session");
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
+
+const postRouter = require('./routes/post');
+const postsRouter = require('./routes/posts');
+const userRouter = require('./routes/user');
 
 
 dotenv.config();
@@ -52,19 +54,9 @@ app.get('/', (req, res) => {
     res.send('hello express');
 });
 
-app.get('/api', (req, res) => {
-    res.send('hello api');
-});
-
-app.get('/api/posts', (req, res) => {
-    res.json([
-        { id: 1, content: 'hello1' },
-        { id: 2, content: 'hello2' },
-        { id: 3, content: 'hello3' }
-    ])
-});
 
 app.use('/post', postRouter);
+app.use('/posts', postsRouter);
 app.use('/user', userRouter);
 
 

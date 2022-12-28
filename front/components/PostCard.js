@@ -44,6 +44,7 @@ const PostCard = ({ post }) => {
     }, []);
 
 
+
     const content = (
         <div>
             {id && post.User.id === id ? (
@@ -122,7 +123,7 @@ PostCard.propTypes = {
         id: PropTypes.number,
         User: PropTypes.object,
         content: PropTypes.string,
-        createdAt: PropTypes.object,
+        createdAt: PropTypes.string,
         Comment: PropTypes.arrayOf(PropTypes.object),
         Images: PropTypes.arrayOf(PropTypes.object)
     }).isRequired

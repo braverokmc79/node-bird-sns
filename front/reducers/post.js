@@ -127,8 +127,9 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         case LOAD_POSTS_SUCCESS:
             draft.loadPostsLoading = false;
             draft.loadPostsDone = true;
+            //draft.mainPosts = draft.mainPosts.concat(action.data);
             draft.mainPosts = action.data.concat(draft.mainPosts);
-            draft.hasMorePosts = draft.mainPosts.length < 50;
+            // draft.hasMorePosts = draft.mainPosts.length < 50;
             break;
 
         case LOAD_POSTS_FAILURE:
@@ -186,7 +187,10 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
 
 
         case ADD_COMMENT_SUCCESS: {
-            const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
+            console.log(" 1. ADD_COMMENT_SUCCESS  :", action.data.PostId);
+            const post = draft.mainPosts.find((v) => v.id === parseInt(action.data.PostId));
+            console.log("2. ADD_COMMENT_SUCCESS  :", post);
+
             post.Comments.unshift(action.data);
             draft.addCommentLoading = false;
             draft.addCommentDone = true;

@@ -1,72 +1,48 @@
 const express = require('express');
-const { Post, User, Image, Comment } = require('../models');
-const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
+const { Post, Image, User, Comment } = require('../models');
+
 const router = express.Router();
 
 
-//** passport 특성상 로그인 하면, 라우터 접근시 항상 deserializeUser 실행해서 req.user 를 만든다.  req.user.id로 접근해서 정보를 가져올 수 있다.
-//POST  /post
-router.post('/', isLoggedIn, async (req, res, next) => {
-    try {
-        const post = await Post.create({
-            content: req.body.content,
-            UserId: req.user.id
-        });
 
-        const fullPost = await Post.findOne({
-            where: { id: post.id },
+//GET /posts
+router.get('/:limit', async (req, res, next) => {
+
+    try {
+        console.log("req.params : ", req.params.limit);
+        const posts = await Post.findAll({
+            // where: { id: lastId },
+            limit: 10,
+            order: [
+                ['createdAt', 'DESC'],
+                [Comment, 'createdAt', 'DESC']
+            ],
+            offsset: parseInt(req.params.limit),
+            //21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1
             include: [{
-                model: Image,
+                model: User,
+                attributes: ['id', 'nickname']
             },
             {
-                model: Comment
-            }, {
-                model: User,
+                model: Image
+            },
+            {
+                model: Comment,
+                include: [{
+                    model: User,
+                    attributes: ['id', 'nickname']
+                }]
             }
             ]
-        })
-
-
-        res.status(201).json(fullPost);
-    } catch (error) {
-        console.error(" Post 에러 :  ", error);
-        next(error);
-    }
-});
-
-
-
-//POST 댓글  /post
-router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {     //POST /post/1/comment
-    try {
-
-        const post = await Post.findOne({
-            where: { id: req.params.postId }
         });
 
-        if (!post) {
-            return res.status(403).send("존재하지 않는 게시글입니다.");
-        }
+        res.status(200).json(posts);
 
-        const comment = await Post.create({
-            content: req.body.content,
-            PostId: req.params.postId,
-            UserId: req.user.id
-        });
-
-        res.status(201).json(comment);
     } catch (error) {
-        console.error(" comment 에러 :  ", error);
+        console.error("posts error : ", error);
         next(error);
     }
-});
 
-
-
-
-//DELETE  /post
-router.delete('/', (req, res) => {
-    res.json({ id: 1 })
 });
 
 

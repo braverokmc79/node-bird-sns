@@ -6,6 +6,8 @@ const PostCardContent = ({ postData }) => {
     //첫번째 게시글 #해시태그 #익스프레스
     return (
         <div>
+
+
             {postData && postData.split(/(#[^\s#]+)/g).map((v, index) => {
 
                 if (v.match(/(#[^\s#]+)/)) {
