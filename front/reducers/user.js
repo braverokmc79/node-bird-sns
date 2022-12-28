@@ -68,15 +68,6 @@ export const LOAD_MY_INFO_FAILURE = "LOAD_MY_INFO_FAILURE";
 
 
 
-const dummyUser = (data) => ({
-    ...data,
-    nickname: '마카로닉스',
-    id: 1,
-    Posts: [{ id: 1 }],
-    Followings: [{ nickname: '부기초' }, { nickname: 'Chanho Lee' }, { nickname: 'neue zeal' }],
-    Followers: [{ nickname: '부기초' }, { nickname: 'Chanho Lee' }, { nickname: 'neue zeal' }]
-});
-
 
 export const loginRequestAction = (data) => {
     return {
@@ -108,7 +99,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         case LOAD_MY_INFO_SUCCESS:
             draft.loadMyInfoLoading = false;
             draft.loadMyInfoDone = true;
-            draft.me=action.data
+            draft.me = action.data
             break;
 
         case LOAD_MY_INFO_FAILURE:
@@ -222,6 +213,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
             break;
 
         case CHANGE_NICKNAME_SUCCESS:
+            draft.me.nickname = action.data.nickname;
             draft.changeNicknameLoading = false;
             draft.changeNicknameDone = true;
             break;

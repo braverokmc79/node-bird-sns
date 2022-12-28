@@ -1,3 +1,4 @@
+const { json } = require('body-parser');
 const express = require('express');
 const { Post, User, Image, Comment } = require('../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
@@ -82,7 +83,7 @@ router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {     //PO
 
 
 
-router.patch('/:postId/like', async (req, res, next) => {  //PATcH  /post/1/like
+router.patch('/:postId/like', isLoggedIn, async (req, res, next) => {  //PATcH  /post/1/like
     try {
         const post = await Post.findOne({
             where: { id: req.params.postId }
@@ -101,7 +102,7 @@ router.patch('/:postId/like', async (req, res, next) => {  //PATcH  /post/1/like
 
 });
 
-router.delete('/:postId/like', async (req, res, next) => {  //DELETE  /post/1/like
+router.delete('/:postId/like', isLoggedIn, async (req, res, next) => {  //DELETE  /post/1/like
     try {
         const post = await Post.findOne({
             where: { id: req.params.postId }
@@ -122,10 +123,25 @@ router.delete('/:postId/like', async (req, res, next) => {  //DELETE  /post/1/li
 
 
 
-//DELETE  /post
-router.delete('/', (req, res) => {
-    res.json({ id: 1 })
+
+//게시글 삭제 DELETE  /post/10
+router.delete('/:postId', isLoggedIn, async (req, res, next) => {
+    console.log(" 게시글 삭제 : ", req.params.postId);
+    console.log(" 패스포트 정보: ", req.user.id);
+    try {
+        await Post.destroy({
+            where: {
+                id: req.params.postId,
+                UserId: req.user.id
+            },
+        });
+        res.status(200).json({ PostId: parseInt(req.params.postId, 10) })
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
 });
+
 
 
 
