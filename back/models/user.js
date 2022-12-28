@@ -14,10 +14,8 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(100),
             allowNull: false,//필수
         }
-
         //PostId:1,2,5,10,15
         //CommentId
-
     }, {
         charset: 'utf8mb4',
         collate: 'utf8mb4_unicode_ci'

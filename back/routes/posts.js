@@ -32,6 +32,11 @@ router.get('/:limit', async (req, res, next) => {
                     model: User,
                     attributes: ['id', 'nickname']
                 }]
+            },
+            {
+                model: User, //좋아요 누른 사람       
+                as: 'Likers',
+                attributes: ['id']
             }
             ]
         });

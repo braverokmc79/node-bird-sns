@@ -10,6 +10,7 @@ import { createGlobalStyle } from 'styled-components';
 import PostCardContent from './PostCardContent';
 import { REMOVE_POST_REQUEST } from '../reducers/post';
 import FollowButton from './FollowButton';
+import { LIKE_POST_REQUEST, UNLIKE_POST_REQUEST } from '../reducers/post';
 
 const Global = createGlobalStyle`
     .ant-card-actions{
@@ -21,15 +22,26 @@ const Global = createGlobalStyle`
 
 const PostCard = ({ post }) => {
     const dispatch = useDispatch();
-
-    const id = useSelector((state) => state.user.me?.id);
     const { removePostLoading } = useSelector((state) => state.post);
-
-    const [liked, setLiked] = useState(false);
     const [commentFormOpened, setCommentFormOpened] = useState(false);
-    const onToggleLike = useCallback(() => {
-        setLiked((prev) => !prev);
+    const id = useSelector((state) => state.user.me?.id);
+    const liked = post.Likers.find((v) => v.id === id);
+
+    const onLike = useCallback(() => {
+        dispatch({
+            type: LIKE_POST_REQUEST,
+            data: post.id
+        })
     }, []);
+
+
+    const onUnlike = useCallback(() => {
+        dispatch({
+            type: UNLIKE_POST_REQUEST,
+            data: post.id
+        })
+    }, []);
+
 
     const onToggleComment = useCallback(() => {
         setCommentFormOpened((prev) => !prev);
@@ -42,7 +54,6 @@ const PostCard = ({ post }) => {
             data: post.id
         })
     }, []);
-
 
 
     const content = (
@@ -68,15 +79,14 @@ const PostCard = ({ post }) => {
                 cover={post.Images[0] && <PostImages images={post.Images} />}
                 actions={[
                     <RetweetOutlined key="retweet" />,
-                    liked ? <HeartTwoTone key="heart" twoToneColor="#ebef96" onClick={onToggleLike} /> :
-                        <HeartOutlined key="heart" onClick={onToggleLike} />,
+                    liked ? <HeartTwoTone key="heart" twoToneColor="red" onClick={onUnlike} /> :
+                        <HeartOutlined key="heart" onClick={onLike} />,
                     <MessageOutlined key="comment" onClick={onToggleComment} />,
                     <Popover content={content} title="" key="popover" style={{ textAlign: "center" }}
                     >
                         <EllipsisOutlined />
                     </Popover>
                 ]}
-
                 extra={id && <FollowButton post={post} />}
             >
                 <Card.Meta
@@ -85,7 +95,6 @@ const PostCard = ({ post }) => {
                     description={<PostCardContent postData={post.content} />}
                 />
                 <Image />
-
             </Card >
 
 
@@ -125,7 +134,8 @@ PostCard.propTypes = {
         content: PropTypes.string,
         createdAt: PropTypes.string,
         Comment: PropTypes.arrayOf(PropTypes.object),
-        Images: PropTypes.arrayOf(PropTypes.object)
+        Images: PropTypes.arrayOf(PropTypes.object),
+        Likers: PropTypes.arrayOf(PropTypes.object)
     }).isRequired
 }
 
