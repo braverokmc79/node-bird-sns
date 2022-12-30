@@ -2,7 +2,46 @@ const { json } = require('body-parser');
 const express = require('express');
 const { Post, User, Image, Comment } = require('../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
 const router = express.Router();
+
+
+try {
+    //업로드 폴더가 존재하는 지 확인 없으면 에러
+    fs.accessSync('uploads');
+} catch (error) {
+    console.log("업로드 폴더가 없으므로 생성합니다.");
+    fs.mkdirSync('uploads');
+}
+
+
+//multer 은 개별적으로 함수로  미들웨어 처리
+const upload = multer({
+    storage: multer.diskStorage({
+        destination(req, file, done) {
+            done(null, 'uploads');
+        },
+        filename(req, file, done) { //제로초.png
+            //path는 노드에서 기본적으로 제공
+            const ext = path.extname(file.originalname); //확장자 추출(.png)
+            const basename = path.basename(file.originalname, ext);//제로초라는 이름만 추출 된다.
+            done(null, basename + new Date().getTime() + ext); //제로초3213421312.png
+        }
+    }),
+    limits: { fileSize: 20 * 1024 * 1024 } //20MB
+});
+
+
+//이미지 업로드  // 하나만 올릴경우 => upload.single('image') , text나 json : upload.none()
+router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next) => {  //POST  /post/images
+    console.log(req.files);
+    res.json(req.files.map((v) => v.filename));
+
+});
+
 
 
 //** passport 특성상 로그인 하면, 라우터 접근시 항상 deserializeUser 실행해서 req.user 를 만든다.  req.user.id로 접근해서 정보를 가져올 수 있다.
@@ -43,6 +82,9 @@ router.post('/', isLoggedIn, async (req, res, next) => {
         next(error);
     }
 });
+
+
+
 
 
 
@@ -126,8 +168,7 @@ router.delete('/:postId/like', isLoggedIn, async (req, res, next) => {  //DELETE
 
 //게시글 삭제 DELETE  /post/10
 router.delete('/:postId', isLoggedIn, async (req, res, next) => {
-    console.log(" 게시글 삭제 : ", req.params.postId);
-    console.log(" 패스포트 정보: ", req.user.id);
+
     try {
         await Post.destroy({
             where: {

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { Form, Input, Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
-import { addPost } from '../reducers/post';
+import { addPost, UPLOAD_IMAGES_REQUEST } from '../reducers/post';
 import useInput from '../hooks/useInput';
 
 
@@ -18,11 +18,11 @@ const PostForm = () => {
         }
     }, [addPostDone])
 
-    useEffect(()=>{
-        if(addPostError){
+    useEffect(() => {
+        if (addPostError) {
             alert(addPostError);
         }
-    },[addPostError])
+    }, [addPostError])
 
     const onSubmit = useCallback(() => {
         dispatch(addPost(text));
@@ -35,6 +35,23 @@ const PostForm = () => {
     }, [imageInput.current]);
 
 
+    const onChangeImages = useCallback((e) => {
+        console.log('images', e.target.files);
+        const imagesFormData = new FormData();
+
+        //e.target.files 이   forEach   메서드가 없기 때문에  배열의    [].forEach.call를 빌려써서 사용한다.
+        [].forEach.call(e.target.files, (f) => {
+            imagesFormData.append('image', f);
+        });
+
+        dispatch({
+            type: UPLOAD_IMAGES_REQUEST,
+            data: imagesFormData
+        });
+
+    }, []);
+
+
     return (
         <Form style={{ margin: '10px 0 20px' }} encType="multipart/form-data" onFinish={onSubmit}>
             <Input.TextArea
@@ -45,9 +62,10 @@ const PostForm = () => {
             />
 
             <div className='mt-5'>
-                <input type="file" multiple hidden ref={imageInput} style={{ display: "none" }} />
-
+                <input type="file" name="image" multiple hidden ref={imageInput} onChange={onChangeImages} style={{ display: "none" }} />
                 <Button onClick={onClickImageUpload}>이미지 업로드</Button>
+
+
                 <Button type="primary" htmlType='submit' style={{ float: 'right' }} loading={addPostLoading}   >글작성</Button>
             </div>
             <div>
