@@ -164,4 +164,106 @@ router.patch('/nickname', isLoggedIn, async (req, res, next) => {
     }
 })
 
+
+//팔로우 추가
+router.patch('/:userId/follow', isLoggedIn, async (req, res, next) => { //PATCH  /user/1/follow
+    try {
+        const user = await User.findOne({ where: { id: req.params.userId } });
+        if (!user) {
+            res.status(403).send('없은 사람을 팔로우하려고 하시네요?');
+        }
+
+        await user.addFollowers(req.user.id)
+        res.status(200).json({ UserId: parseInt(req.params.userId, 10) })
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+
+});
+
+
+//팔로우 취소 ==> 팔로잉 제거
+router.delete('/:userId/follow', isLoggedIn, async (req, res, next) => { //DELETE  /user/1/follow
+    try {
+        const user = await User.findOne({ where: { id: req.params.userId } });
+        console.log(" 팔로잉 제거  : ", req.params.userId);
+
+        if (!user) {
+            res.status(403).send('없은 사람을 제거하려고  하시네요?');
+        }
+        //const me = await User.findOne({ where: { id: req.user.id } });
+        //제거 하려는 아이디 req.params.userId  이다.
+        //현재 접속 한 나의 아이디는  패스포트로 req.user.id 이다.
+        //따라서, and  조건으로 findOne me 가져오고 으로 제거하려는 req.params.userId  넣으면 된다.
+        //DELETE FROM `Follow` WHERE `FollowerId` = 2 AND `FollowingId` IN (1)
+        //await me.removeFollowings(req.params.userId);
+
+        //=>  반대로 팔로워 제거로 해도 된다.
+        await user.removeFollowers(req.user.id);
+
+        res.status(200).json({ UserId: parseInt(req.params.userId, 10) })
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+
+//팔로우 차단 => 팔로워 제거
+router.delete('/follower/:userId', isLoggedIn, async (req, res, next) => { //DELETE  /user/1/follow
+    try {
+        console.log(" 팔로워 제거  : ", req.params.userId);
+        const user = await User.findOne({ where: { id: req.params.userId } });
+        if (!user) {
+            res.status(403).send('없은 사람을 팔로우차단 하려고 하시네요?');
+        }
+        // const me = await User.findOne({ where: { id: req.user.id } });
+        // await me.removeFollowers(req.params.userId);
+
+        //=>  반대로 팔로잉 제거로 한번만 실행 처리
+        await user.removeFollowings(req.user.id);
+
+        res.status(200).json({ UserId: parseInt(req.params.userId, 10) })
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+
+
+
+
+
+//팔로워 불러워기
+router.get('/followers', isLoggedIn, async (req, res, next) => { //get  /user/followers
+    try {
+        //패스포트에 로그인한 user id  값 :  req.user.id
+        const user = await User.findOne({ where: { id: req.user.id } });
+        const followers = await user.getFollowers();
+        res.status(200).json(followers)
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+
+
+// 팔로잉 불러워기 시퀄라이즈에서 다음과 같이 Followings  처리를 해서  getFollowings 적용 됨
+router.get('/followings', isLoggedIn, async (req, res, next) => { //get  /user/followings
+    try {
+        const user = await User.findOne({ where: { id: req.user.id } });
+        const followings = await user.getFollowings();
+        res.status(200).json(followings);
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+
+
+
 module.exports = router;
