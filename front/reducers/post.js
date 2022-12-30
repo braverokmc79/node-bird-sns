@@ -105,6 +105,10 @@ export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
 export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
 
 
+export const REMOVE_IMAGE = 'REMOVE_IMAGE';
+
+
+
 export const addPost = (data) => ({
     type: ADD_POST_REQUEST,
     data
@@ -142,7 +146,10 @@ const dummyComment = (data) => ({
 const reducer = (state = initialState, action) => produce(state, (draft) => {
 
     switch (action.type) {
-
+        //이미지는 서버에서 삭제처리 안해서 다음과 같이 프론트에서만 이미지 제거 처리
+        case REMOVE_IMAGE:
+            draft.imagePaths = draft.imagePaths.filter((v, i) => i != action.data);
+            break;
 
         //이미지 업로드
         case UPLOAD_IMAGES_REQUEST:
@@ -239,6 +246,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
             draft.addPostLoading = false;
             draft.addPostDone = true;
             draft.mainPosts.unshift(action.data);
+            draft.imagePaths = [];
             break;
 
         case ADD_POST_FAILURE:

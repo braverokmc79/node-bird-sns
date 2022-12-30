@@ -155,7 +155,8 @@ function* watchLoadPosts() {
 
 //3-1. 글작성
 function addPostAPI(data) {
-    return axios.post('/post', { content: data });
+    //fomData 는 json 형태가 아닌 data 그자체 전송처리
+    return axios.post('/post', data);
 }
 
 //3-2.

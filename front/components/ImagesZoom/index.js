@@ -8,7 +8,7 @@ import { Overlay, Global, Header, SlickWrapper, ImageWrapper, Indicator } from "
 
 
 
-const ImagesZoom = ({ images, onClose }) => {
+const ImagesZoom = ({ images, onClose, ImageURL }) => {
     const settings = {
         dots: true,
         infinite: true,
@@ -47,7 +47,7 @@ const ImagesZoom = ({ images, onClose }) => {
                         {images && images.map((v) => {
                             return (
                                 <ImageWrapper key={v.src}>
-                                    <img src={v.src} alt={v.src} />
+                                    <img src={ImageURL + v.src} alt={v.src} />
                                 </ImageWrapper>
                             )
                         })}

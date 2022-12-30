@@ -10,7 +10,7 @@ const dotenv = require('dotenv');
 const postRouter = require('./routes/post');
 const postsRouter = require('./routes/posts');
 const userRouter = require('./routes/user');
-
+const path = require('path');
 
 dotenv.config();
 const app = express();
@@ -29,6 +29,8 @@ app.use(cors({
     credentials: true
 }));
 
+//express 에 static 함수가 존재   path.join 을 하면 운영체제 상관없이 경로설정을 잡아준다.
+app.use('/', express.static(path.join(__dirname, 'uploads')));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

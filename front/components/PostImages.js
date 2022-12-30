@@ -16,6 +16,7 @@ const ImgDiv = styled.div`
     }
 `;
 
+export const ImageURL = `http://localhost:3065/`;
 
 const PostImages = ({ images }) => {
 
@@ -36,7 +37,7 @@ const PostImages = ({ images }) => {
     if (images.length === 1) {
         return (
             <ImgDiv>
-                <img role="presentation" src={images[0].src} alt={images[0].src} onClick={onZoom} width="49%" />
+                <img role="presentation" src={ImageURL + images[0].src} alt={images[0].src} onClick={onZoom} width="49%" />
                 {showImageZoom && <ImagesZoom images={images} onClose={onClose} />}
             </ImgDiv>
         )
@@ -44,9 +45,9 @@ const PostImages = ({ images }) => {
         return (
             <>
                 <ImgDiv>
-                    <img role="presentation" src={images[0].src} alt={images[0].src} onClick={onZoom} style={{ width: "49%" }} />
-                    <img role="presentation" src={images[1].src} alt={images[1].src} onClick={onZoom} style={{ width: "49%" }} />
-                    {showImageZoom && <ImagesZoom images={images} onClose={onClose} />}
+                    <img role="presentation" src={ImageURL + images[0].src} alt={images[0].src} onClick={onZoom} style={{ width: "49%" }} />
+                    <img role="presentation" src={ImageURL + images[1].src} alt={images[1].src} onClick={onZoom} style={{ width: "49%" }} />
+                    {showImageZoom && <ImagesZoom images={images} ImageURL={ImageURL} onClose={onClose} />}
                 </ImgDiv>
             </>
         )
@@ -56,7 +57,7 @@ const PostImages = ({ images }) => {
         return (
             <>
                 <ImgDiv style={{ width: "100%" }}>
-                    <img role="presentation" src={images[0].src} alt={images[0].src}
+                    <img role="presentation" src={ImageURL + images[0].src} alt={images[0].src}
                         onClick={onZoom} style={{ width: "49%", display: `${showImageZoom ? 'none' : "inline-block"}` }} />
 
                     <div

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { Form, Input, Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
-import { addPost, UPLOAD_IMAGES_REQUEST } from '../reducers/post';
+import { addPost, ADD_POST_REQUEST, UPLOAD_IMAGES_REQUEST, REMOVE_IMAGE } from '../reducers/post';
 import useInput from '../hooks/useInput';
 
 
@@ -25,9 +25,26 @@ const PostForm = () => {
     }, [addPostError])
 
     const onSubmit = useCallback(() => {
-        dispatch(addPost(text));
+        if (!text || !text.trim()) {
+            return alert('게시글을 작성하세요.');
+        }
+
+        //이미지 주소까지 같이 업로드
+        const formData = new FormData();
+        imagePaths.forEach((p) => {
+            formData.append('image', p);
+        });
+        formData.append('content', text);
+        //현재 이미지가 아니라 이미지주소라 formData 를 사용하지 않아도 되나 현재 nodejs 에서
+        //upload.none() 사용하기 위해 FormData 데이터 전송 처리
+        dispatch({
+            type: ADD_POST_REQUEST,
+            data: formData
+        });
+
         setText("");
-    }, [text]);
+    }, [text, imagePaths]);
+
 
 
     const onClickImageUpload = useCallback(() => {
@@ -52,6 +69,15 @@ const PostForm = () => {
     }, []);
 
 
+    //리스트 배열에서 인덱스값 파라미터 를 가져오려면 고차함수 사용
+    const onRemoveImage = useCallback((index) => () => {
+        dispatch({
+            type: REMOVE_IMAGE,
+            data: index
+        })
+    });
+
+
     return (
         <Form style={{ margin: '10px 0 20px' }} encType="multipart/form-data" onFinish={onSubmit}>
             <Input.TextArea
@@ -70,11 +96,11 @@ const PostForm = () => {
             </div>
             <div>
                 {
-                    imagePaths.map((v) => (
+                    imagePaths.map((v, i) => (
                         <div key={v} style={{ display: "inline-block" }}>
-                            <img src={v} style={{ width: '200px' }} alt={v} />
+                            <img src={`http://localhost:3065/${v}`} style={{ width: '200px', marginRight: '5px', height: '125px' }} alt={v} />
                             <div>
-                                <Button>제거</Button>
+                                <Button onClick={onRemoveImage(i)}>제거</Button>
                             </div>
                         </div>
                     ))

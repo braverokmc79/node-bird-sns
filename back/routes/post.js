@@ -28,12 +28,11 @@ const upload = multer({
             //path는 노드에서 기본적으로 제공
             const ext = path.extname(file.originalname); //확장자 추출(.png)
             const basename = path.basename(file.originalname, ext);//제로초라는 이름만 추출 된다.
-            done(null, basename + new Date().getTime() + ext); //제로초3213421312.png
+            done(null, basename + '_' + new Date().getTime() + ext); //제로초3213421312.png
         }
     }),
     limits: { fileSize: 20 * 1024 * 1024 } //20MB
 });
-
 
 //이미지 업로드  // 하나만 올릴경우 => upload.single('image') , text나 json : upload.none()
 router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next) => {  //POST  /post/images
@@ -46,12 +45,26 @@ router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next)
 
 //** passport 특성상 로그인 하면, 라우터 접근시 항상 deserializeUser 실행해서 req.user 를 만든다.  req.user.id로 접근해서 정보를 가져올 수 있다.
 //POST  /post
-router.post('/', isLoggedIn, async (req, res, next) => {
+router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
     try {
         const post = await Post.create({
             content: req.body.content,
             UserId: req.user.id
         });
+
+        if (req.body.image) {
+            //1.업로드 이미지가 여러개인경우 => image : [제로초.png, 부기초.png]
+            if (Array.isArray(req.body.image)) {
+                //await Promise.all ~ map ~  Image.creat  처리하면 이미지들의 URL 배열 데이터들이 DB 에 저장 된다.
+                const images = await Promise.all(req.body.image.map((image) => Image.create({ src: image })));
+                //Image 테이블의 PostId 컬럼값이 업데이트 처리된다.
+                await post.addImages(images);
+            } else {
+                //2. 업로드 이미지가 하나인 경우 =>  image : 제로초.png
+                const image = await Image.create({ src: req.body.image });
+                await post.addImages(image);
+            }
+        }
 
         const fullPost = await Post.findOne({
             where: { id: post.id },
