@@ -1,6 +1,6 @@
 const { json } = require('body-parser');
 const express = require('express');
-const { Post, User, Image, Comment } = require('../models');
+const { Post, User, Image, Comment, Hashtag } = require('../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const multer = require('multer');
 const path = require('path');
@@ -47,10 +47,22 @@ router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next)
 //POST  /post
 router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
     try {
+        const hashtags = req.body.content.match(/#[^\s#]+/g);
         const post = await Post.create({
             content: req.body.content,
             UserId: req.user.id
         });
+        if (hashtags) {
+            //findOneCreate => 있으면 가져오고 없으면 등록처리한다.
+            const result = await Promise.all(hashtags.map((tag) => Hashtag.findOrCreate(
+                {
+                    where: { name: tag.slice(1).toLowerCase() }
+                }
+            )));
+            //result 값 예  => +[[노드, true] , [리액트, true]]
+            await post.addHashtag(result.map((v) => v[0]));
+        }
+
 
         if (req.body.image) {
             //1.업로드 이미지가 여러개인경우 => image : [제로초.png, 부기초.png]

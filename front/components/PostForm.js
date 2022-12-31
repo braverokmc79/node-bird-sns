@@ -89,7 +89,7 @@ const PostForm = () => {
 
             <div className='mt-5'>
                 <input type="file" name="image" multiple hidden ref={imageInput} onChange={onChangeImages} style={{ display: "none" }} />
-                <Button onClick={onClickImageUpload}>이미지 업로드</Button>
+                <Button onClick={onClickImageUpload} style={{ marginBottom: '5px' }}>이미지 업로드</Button>
 
 
                 <Button type="primary" htmlType='submit' style={{ float: 'right' }} loading={addPostLoading}   >글작성</Button>
@@ -98,7 +98,7 @@ const PostForm = () => {
                 {
                     imagePaths.map((v, i) => (
                         <div key={v} style={{ display: "inline-block" }}>
-                            <img src={`http://localhost:3065/${v}`} style={{ width: '200px', marginRight: '5px', height: '125px' }} alt={v} />
+                            <img src={`http://localhost:3065/${v}`} style={{ width: 'auto', marginRight: '5px', height: '125px' }} alt={v} />
                             <div>
                                 <Button onClick={onRemoveImage(i)}>제거</Button>
                             </div>
