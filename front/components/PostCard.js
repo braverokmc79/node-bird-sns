@@ -10,11 +10,16 @@ import { createGlobalStyle } from 'styled-components';
 import PostCardContent from './PostCardContent';
 import { REMOVE_POST_REQUEST } from '../reducers/post';
 import FollowButton from './FollowButton';
-import { LIKE_POST_REQUEST, UNLIKE_POST_REQUEST } from '../reducers/post';
+import { LIKE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_REQUEST } from '../reducers/post';
 
 const Global = createGlobalStyle`
     .ant-card-actions{
      background: #eeeeee !important;
+    }
+
+    .ant-card-head-title{
+        background: #f0f0f0;
+        padding: 16px !important;
     }
 `;
 
@@ -22,12 +27,14 @@ const Global = createGlobalStyle`
 
 const PostCard = ({ post }) => {
     const dispatch = useDispatch();
-    const { removePostLoading } = useSelector((state) => state.post);
+    const { removePostLoading, reTweetDone } = useSelector((state) => state.post);
     const [commentFormOpened, setCommentFormOpened] = useState(false);
     const id = useSelector((state) => state.user.me?.id);
     const liked = post.Likers.find((v) => v.id === id);
 
     const onLike = useCallback(() => {
+        if (!id) return alert("로그인이 필요합니다.");
+
         dispatch({
             type: LIKE_POST_REQUEST,
             data: post.id
@@ -36,6 +43,8 @@ const PostCard = ({ post }) => {
 
 
     const onUnlike = useCallback(() => {
+        if (!id) return alert("로그인이 필요합니다.");
+
         dispatch({
             type: UNLIKE_POST_REQUEST,
             data: post.id
@@ -57,6 +66,22 @@ const PostCard = ({ post }) => {
         }
 
     }, []);
+
+
+    const onRetweet = useCallback(() => {
+        if (!id) return alert("로그인이 필요합니다.");
+
+        dispatch({
+            type: RETWEET_REQUEST,
+            data: post.id
+        });
+
+
+
+    }, [id, reTweetDone]);
+
+
+
 
 
     const content = (
@@ -81,7 +106,8 @@ const PostCard = ({ post }) => {
             <Card key={post.Image}
                 cover={post.Images[0] && <PostImages images={post.Images} />}
                 actions={[
-                    <RetweetOutlined key="retweet" />,
+                    <RetweetOutlined key="retweet" onClick={onRetweet} />,
+
                     liked ? <HeartTwoTone key="heart" twoToneColor="red" onClick={onUnlike} /> :
                         <HeartOutlined key="heart" onClick={onLike} />,
                     <MessageOutlined key="comment" onClick={onToggleComment} />,
@@ -90,13 +116,31 @@ const PostCard = ({ post }) => {
                         <EllipsisOutlined />
                     </Popover>
                 ]}
+                title={post.Retweet && `'${post.User.nickname}'님이 리트윗 하셨습니다.`}
                 extra={id && <FollowButton post={post} />}
             >
-                <Card.Meta
-                    avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
-                    title={post.User.nickname}
-                    description={<PostCardContent postData={post.content} />}
-                />
+
+                {post.RetweetId && post.Retweet ? (
+                    <Card
+                        cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images} />}
+                        style={{ background: '#eee' }}
+                    >
+
+                        <Card.Meta
+                            avatar={<Avatar>{post.Retweet.User.nickname[0]}</Avatar>}
+                            title={post.Retweet.User.nickname}
+                            description={<PostCardContent postData={post.Retweet.content} />}
+                        />
+
+                    </Card>
+                ) :
+                    <Card.Meta
+                        avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
+                        title={post.User.nickname}
+                        description={<PostCardContent postData={post.content} />}
+                    />
+
+                }
                 <Image />
             </Card >
 
@@ -138,7 +182,9 @@ PostCard.propTypes = {
         createdAt: PropTypes.string,
         Comment: PropTypes.arrayOf(PropTypes.object),
         Images: PropTypes.arrayOf(PropTypes.object),
-        Likers: PropTypes.arrayOf(PropTypes.object)
+        Likers: PropTypes.arrayOf(PropTypes.object),
+        RetweetId: PropTypes.number,
+        Retweet: PropTypes.objectOf(PropTypes.any)
     }).isRequired
 }
 

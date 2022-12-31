@@ -35,7 +35,11 @@ export const initialState = {
 
     uploadImagesLoading: false,
     uploadImagesDone: false,
-    uploadImagesError: null
+    uploadImagesError: null,
+
+    reTweetLoading: false,
+    reTweetDone: false,
+    reTweetError: null
 }
 
 
@@ -74,7 +78,6 @@ export const generateDummyPost = (number) => Array(10).fill().map(() => ({
 
 
 
-
 export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST';
 export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS';
 export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE';
@@ -106,6 +109,11 @@ export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
 
 
 export const REMOVE_IMAGE = 'REMOVE_IMAGE';
+
+export const RETWEET_REQUEST = 'RETWEET_REQUEST';
+export const RETWEET_SUCCESS = 'RETWEET_SUCCESS';
+export const RETWEET_FAILURE = 'RETWEET_FAILURE';
+
 
 
 
@@ -146,6 +154,28 @@ const dummyComment = (data) => ({
 const reducer = (state = initialState, action) => produce(state, (draft) => {
 
     switch (action.type) {
+
+        //이미지 업로드
+        case RETWEET_REQUEST:
+            draft.reTweetLoading = true;
+            draft.reTweetDone = false;
+            draft.reTweetError = null;
+            break;
+
+        case RETWEET_SUCCESS: {
+            draft.mainPosts.unshift(action.data);
+            draft.reTweetLoading = false;
+            draft.reTweetDone = true;
+            break;
+        }
+
+        case RETWEET_FAILURE:
+            draft.reTweetLoading = false;
+            draft.reTweetError = action.error;
+            break;
+
+
+
         //이미지는 서버에서 삭제처리 안해서 다음과 같이 프론트에서만 이미지 제거 처리
         case REMOVE_IMAGE:
             draft.imagePaths = draft.imagePaths.filter((v, i) => i != action.data);

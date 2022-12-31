@@ -10,7 +10,7 @@ import { LOAD_POSTS_REQUEST } from './../reducers/post';
 const Index = () => {
     const dispatch = useDispatch();
     const { me } = useSelector((state) => state.user);
-    const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector((state) => state.post);
+    const { mainPosts, hasMorePosts, loadPostsLoading, reTweetError, reTweetDone } = useSelector((state) => state.post);
 
     useEffect(() => {
         dispatch({
@@ -21,6 +21,20 @@ const Index = () => {
             type: LOAD_POSTS_REQUEST
         });
     }, []);
+
+    useEffect(() => {
+        if (reTweetError) {
+            return alert(reTweetError);
+        }
+    }, [reTweetError]);
+
+
+    useEffect(() => {
+        if (reTweetDone) {
+            alert("리트윗 되었습니다.");
+        }
+    }, [reTweetDone]);
+
 
 
     useEffect(() => {
