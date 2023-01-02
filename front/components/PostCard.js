@@ -10,7 +10,7 @@ import { createGlobalStyle } from 'styled-components';
 import PostCardContent from './PostCardContent';
 import { REMOVE_POST_REQUEST } from '../reducers/post';
 import FollowButton from './FollowButton';
-import { LIKE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_REQUEST } from '../reducers/post';
+import { LIKE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_REQUEST, LOAD_POSTS_REQUEST } from '../reducers/post';
 
 const Global = createGlobalStyle`
     .ant-card-actions{
@@ -27,7 +27,7 @@ const Global = createGlobalStyle`
 
 const PostCard = ({ post }) => {
     const dispatch = useDispatch();
-    const { removePostLoading, reTweetDone } = useSelector((state) => state.post);
+    const { removePostLoading, mainPosts } = useSelector((state) => state.post);
     const [commentFormOpened, setCommentFormOpened] = useState(false);
     const id = useSelector((state) => state.user.me?.id);
     const liked = post.Likers.find((v) => v.id === id);
@@ -39,7 +39,7 @@ const PostCard = ({ post }) => {
             type: LIKE_POST_REQUEST,
             data: post.id
         })
-    }, []);
+    }, [id]);
 
 
     const onUnlike = useCallback(() => {
@@ -49,7 +49,7 @@ const PostCard = ({ post }) => {
             type: UNLIKE_POST_REQUEST,
             data: post.id
         })
-    }, []);
+    }, [id]);
 
 
     const onToggleComment = useCallback(() => {
@@ -57,15 +57,25 @@ const PostCard = ({ post }) => {
     }, []);
 
 
-    const onRemovePost = useCallback(() => {
+    const onRemovePost = useCallback(async () => {
+
+
         if (window.confirm("정말 삭제 하시겠습니까?")) {
+            console.log(1);
             dispatch({
                 type: REMOVE_POST_REQUEST,
                 data: post.id
-            })
+            });
+
+
+            setTimeout(() => {
+                location.reload();
+            }, 300);
+
         }
 
-    }, []);
+
+    }, [post.id, mainPosts]);
 
 
     const onRetweet = useCallback(() => {
@@ -76,9 +86,7 @@ const PostCard = ({ post }) => {
             data: post.id
         });
 
-
-
-    }, [id, reTweetDone]);
+    }, [id]);
 
 
 
@@ -184,9 +192,9 @@ PostCard.propTypes = {
         Images: PropTypes.arrayOf(PropTypes.object),
         Likers: PropTypes.arrayOf(PropTypes.object),
         RetweetId: PropTypes.number,
-        Retweet: PropTypes.objectOf(PropTypes.any)
+        Retweet: PropTypes.objectOf(PropTypes.any),
+        lastId: PropTypes.number
     }).isRequired
 }
-
 
 export default PostCard;

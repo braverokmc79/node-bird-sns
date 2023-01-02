@@ -80,23 +80,56 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
 
         const fullPost = await Post.findOne({
             where: { id: post.id },
+            // include: [{
+            //     model: Image,
+            // },
+            // {
+            //     model: Comment,
+            //     include: [{
+            //         model: User, //댓글 작성자
+            //         attributes: ['id', 'nickname']
+            //     }]
+            // }, {
+            //     model: User,  //게시글 작성자
+            //     attributes: ['id', 'nickname']
+
+            // }, {
+            //     model: User, //좋아요 누른 사람       
+            //     as: 'Likers',
+            //     attributes: ['id']
+            // }
+            // ]
             include: [{
-                model: Image,
+                model: User,
+                attributes: ['id', 'nickname']
+            },
+            {
+                model: Image
             },
             {
                 model: Comment,
                 include: [{
-                    model: User, //댓글 작성자
+                    model: User,
                     attributes: ['id', 'nickname']
                 }]
-            }, {
-                model: User,  //게시글 작성자
-                attributes: ['id', 'nickname']
-
-            }, {
+            },
+            {
                 model: User, //좋아요 누른 사람       
                 as: 'Likers',
                 attributes: ['id']
+            },
+            {
+                model: Post,
+                as: 'Retweet',
+                include: [
+                    {
+                        model: User,
+                        attributes: ['id', 'nickname']
+                    },
+                    {
+                        model: Image
+                    }
+                ]
             }
             ]
         })

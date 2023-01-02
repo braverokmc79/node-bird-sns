@@ -17,8 +17,10 @@ const Index = () => {
             type: LOAD_MY_INFO_REQUEST
         });
 
+        const lastId = mainPosts[mainPosts.length - 1]?.id;
         dispatch({
-            type: LOAD_POSTS_REQUEST
+            type: LOAD_POSTS_REQUEST,
+            lastId
         });
     }, []);
 
@@ -40,10 +42,14 @@ const Index = () => {
     useEffect(() => {
         function onScroll() {
             if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
+                // console.log("hasMorePosts && !loadPostsLoading : ", hasMorePosts, loadPostsLoading);
 
                 if (hasMorePosts && !loadPostsLoading) {
+                    const lastId = mainPosts[mainPosts.length - 1]?.id;
+                    // console.log(" lastId  : ", lastId);
                     dispatch({
-                        type: LOAD_POSTS_REQUEST
+                        type: LOAD_POSTS_REQUEST,
+                        lastId
                     })
                 }
             }
@@ -54,8 +60,8 @@ const Index = () => {
         return () => {
             window.removeEventListener('scroll', onScroll);
         }
+    }, [hasMorePosts, loadPostsLoading, mainPosts]);
 
-    }, [hasMorePosts, loadPostsLoading]);
 
 
 

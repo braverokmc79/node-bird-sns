@@ -4,15 +4,15 @@ import {
     ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE,
     ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE,
     REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE,
-    LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE, 
+    LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE,
     LIKE_POST_REQUEST, LIKE_POST_SUCCESS, LIKE_POST_FAILURE,
     UNLIKE_POST_REQUEST, UNLIKE_POST_SUCCESS, UNLIKE_POST_FAILURE,
-    UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE,
+    UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE, generateDummyPost,
     RETWEET_REQUEST, RETWEET_SUCCESS, RETWEET_FAILURE
 } from '../reducers/post'
 
 import {
-    REMOVE_POST_OF_ME
+    ADD_POST_TO_ME, REMOVE_POST_OF_ME
 } from '../reducers/user';
 
 
@@ -123,22 +123,19 @@ function* watchUnlikePost() {
 
 
 
-let scrollCount = 0
-
 //무한 스크롤
-function loadPostsAPI(data) {
-    console.log("DB 데이터 가져오기 :");
-    return axios.get(`/posts/${data}`);
+function loadPostsAPI(lastId) {
+    return axios.get(`/posts?lastId=${lastId || 0}&limit=10&offset=10`);
 }
 
 function* loadPosts(action) {
     try {
-        yield delay(1000);
-        scrollCount += 10;
 
-        const result = yield call(loadPostsAPI, scrollCount);
-        console.log(" 2무한 스크롤  result: ", scrollCount, result.data);
-        //        console.log(" 3무한 스크롤  generateDummyPost: ", generateDummyPost(10));
+        // console.log("리액트 마지막 아이디 : ", action.lastId);
+        const result = yield call(loadPostsAPI, action.lastId);
+        // console.log(" 3무한 스크롤  generateDummyPost: ", generateDummyPost(10));
+
+
 
         yield put({
             type: LOAD_POSTS_SUCCESS,
@@ -198,10 +195,11 @@ function* addPost(action) {
             data: result.data
         });
 
-        // yield put({
-        //     type: ADD_POST_TO_ME,
-        //     data: result.data.id
-        // })
+        yield put({
+            type: ADD_POST_TO_ME,
+            data: result.data.id
+        });
+
 
     } catch (err) {
         console.log(err);
@@ -229,18 +227,20 @@ function removePostAPI(data) {
 function* removePost(action) {
     try {
 
-        console.log("게시글 삭제 :", action.data);
         const result = yield call(removePostAPI, action.data);
+        console.log("게시글 삭제 :", action.data, result.data);
 
         yield put({
             type: REMOVE_POST_SUCCESS,
-            data: result.data
+            data: result.data.PostId
         });
 
         yield put({
             type: REMOVE_POST_OF_ME,
-            data: action.data
-        })
+            data: result.data.PostId
+        });
+
+
 
     } catch (err) {
         console.log(err);
@@ -250,6 +250,8 @@ function* removePost(action) {
         });
     }
 }
+
+
 
 function* watchRemovePost() {
     yield takeLatest(REMOVE_POST_REQUEST, removePost);

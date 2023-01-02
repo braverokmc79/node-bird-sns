@@ -6,7 +6,7 @@ import useInput from '../hooks/useInput';
 
 
 const PostForm = () => {
-    const { imagePaths, addPostDone, addPostLoading, addPostError } = useSelector((state) => state.post);
+    const { imagePaths, addPostDone, addPostLoading, addPostError, LOAD_POSTS_REQUEST, mainPosts } = useSelector((state) => state.post);
     const dispatch = useDispatch();
     const imageInput = useRef();
 
@@ -34,6 +34,7 @@ const PostForm = () => {
         imagePaths.forEach((p) => {
             formData.append('image', p);
         });
+
         formData.append('content', text);
         //현재 이미지가 아니라 이미지주소라 formData 를 사용하지 않아도 되나 현재 nodejs 에서
         //upload.none() 사용하기 위해 FormData 데이터 전송 처리
@@ -42,8 +43,15 @@ const PostForm = () => {
             data: formData
         });
 
-        setText("");
-    }, [text, imagePaths]);
+        //setText("");
+
+
+        setTimeout(() => {
+            location.reload();
+        }, 300);
+
+
+    }, [text, imagePaths, mainPosts]);
 
 
 

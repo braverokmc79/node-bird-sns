@@ -67,9 +67,14 @@ export const generateDummyPost = (number) => Array(10).fill().map(() => ({
             nickname: faker.internet.userName()
         },
         content: faker.lorem.paragraph()
-    }]
+    }],
+
+    Likers: [
+        { id: 0 }
+    ]
 
 }));
+
 
 // initialState.mainPosts = initialState.mainPosts.concat(
 //     generateDummyPost(10)
@@ -130,25 +135,25 @@ export const addComment = (data) => ({
 
 
 
-const dummyPost = (data) => ({
-    id: data.id,
-    content: data.content,
-    User: {
-        id: 1,
-        nickname: '마카로닉스'
-    },
-    Images: [],
-    Comments: []
-});
+// const dummyPost = (data) => ({
+//     id: data.id,
+//     content: data.content,
+//     User: {
+//         id: 1,
+//         nickname: '마카로닉스'
+//     },
+//     Images: [],
+//     Comments: []
+// });
 
-const dummyComment = (data) => ({
-    id: shortid.generate(),
-    content: data,
-    User: {
-        id: 1,
-        nickname: '마카로닉스'
-    }
-});
+// const dummyComment = (data) => ({
+//     id: shortid.generate(),
+//     content: data,
+//     User: {
+//         id: 1,
+//         nickname: '마카로닉스'
+//     }
+// });
 
 //이전 상태를 액션을 통해 다음 상태로 만들어내는 함수(불변성은 지키면서)
 const reducer = (state = initialState, action) => produce(state, (draft) => {
@@ -254,9 +259,10 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         case LOAD_POSTS_SUCCESS:
             draft.loadPostsLoading = false;
             draft.loadPostsDone = true;
-            //draft.mainPosts = draft.mainPosts.concat(action.data);
-            draft.mainPosts = action.data.concat(draft.mainPosts);
-            // draft.hasMorePosts = draft.mainPosts.length < 50;
+            draft.mainPosts = draft.mainPosts.concat(action.data);
+            // console.log("무한 스크롤 : ", draft.mainPosts);
+            //draft.mainPosts = action.data.concat(draft.mainPosts);
+            draft.hasMorePosts = action.data.length === 10;
             break;
 
         case LOAD_POSTS_FAILURE:
@@ -275,6 +281,9 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         case ADD_POST_SUCCESS:
             draft.addPostLoading = false;
             draft.addPostDone = true;
+            //배열의 맨 앞에 요소를 추가함
+            //console.log("*배열의 맨 앞에 요소를 추가함 : ", draft.mainPosts);
+            //draft.mainPosts = action.data.concat(draft.mainPosts);
             draft.mainPosts.unshift(action.data);
             draft.imagePaths = [];
             break;
@@ -294,6 +303,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
             break;
 
         case REMOVE_POST_SUCCESS:
+            console.log(" s 게시글 삭제 : ", action.data);
             draft.mainPosts = draft.mainPosts.filter((v) => v.id !== action.data);
             draft.removePostLoading = false;
             draft.removePostDone = true;
