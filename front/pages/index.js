@@ -6,23 +6,13 @@ import PostCard from './../components/PostCard';
 import PostForm from './../components/PostForm';
 import { LOAD_MY_INFO_REQUEST } from './../reducers/user';
 import { LOAD_POSTS_REQUEST } from './../reducers/post';
+import { END } from 'redux-saga';
+import wrapper from '../store/configureStore';
 
-const Index = () => {
+const Home = () => {
     const dispatch = useDispatch();
     const { me } = useSelector((state) => state.user);
     const { mainPosts, hasMorePosts, loadPostsLoading, reTweetError, reTweetDone } = useSelector((state) => state.post);
-
-    useEffect(() => {
-        dispatch({
-            type: LOAD_MY_INFO_REQUEST
-        });
-
-        const lastId = mainPosts[mainPosts.length - 1]?.id;
-        dispatch({
-            type: LOAD_POSTS_REQUEST,
-            lastId
-        });
-    }, []);
 
     useEffect(() => {
         if (reTweetError) {
@@ -30,14 +20,11 @@ const Index = () => {
         }
     }, [reTweetError]);
 
-
     useEffect(() => {
         if (reTweetDone) {
             alert("리트윗 되었습니다.");
         }
     }, [reTweetDone]);
-
-
 
     useEffect(() => {
         function onScroll() {
@@ -64,7 +51,6 @@ const Index = () => {
 
 
 
-
     return (
         <AppLayout>
             {me && <PostForm />}
@@ -73,4 +59,30 @@ const Index = () => {
     );
 };
 
-export default Index;
+// 서버사이드 렌더링 : 프론트 서버가 직접 요청하기 때문에 withCredentials문제 다시 발생하므로 브러우저 대신 cookie를 보내줘야함.
+//home 실행되기전에 가장 먼저 실행 된다.
+//초기 화면 랜더될때에는 리덕스에 데이터가 채워진체로 실행
+//다음 코드는 프론트 서버에서 실행
+//도메인이 다르면 쿠키전달 안된다.
+export const getServerSideProps = wrapper.getServerSideProps((store) => async () => {
+
+    console.log('getServerSideProps start');
+    //console.log(context.req.headers);
+
+    store.dispatch({
+        type: LOAD_MY_INFO_REQUEST,
+    });
+
+
+    store.dispatch({
+        type: LOAD_POSTS_REQUEST
+    });
+
+    //다음 코드는 nextjs  문서
+    store.dispatch(END);
+    console.log('getServerSideProps end');
+    await store.sagaTask.toPromise();
+})
+
+export default Home;
+

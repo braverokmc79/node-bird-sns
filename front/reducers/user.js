@@ -9,8 +9,6 @@ export const initialState = {
     removeFollowDone: false,
     removeFollowError: null,
 
-
-
     followLoading: false,//팔로우 시도중
     followDone: false,
     followError: null,
@@ -31,9 +29,13 @@ export const initialState = {
     changeNicknameDone: false,
     changeNicknameError: null,
 
-    loadMyInfoLoading: false, //브라우저 새로고침시  유저정보 가져오기
+    loadMyInfoLoading: false, //브라우저 새로고침시  나의 정보 가져오기
     loadMyInfoDone: false,
     loadMyInfoError: null,
+
+    loadUserInfoLoading: false, //브라우저 새로고침시  유저정보 가져오기
+    loadUserInfoDone: false,
+    loadUserInfoError: null,
 
     loadFollowersLoading: false, //팔로워 목록 가져오기
     loadFollowersDone: false,
@@ -45,8 +47,7 @@ export const initialState = {
 
 
     me: null,
-    signUpdata: {},
-    loginData: {}
+    userInfo: null
 }
 
 
@@ -89,6 +90,10 @@ export const LOAD_MY_INFO_REQUEST = "LOAD_MY_INFO_REQUEST";
 export const LOAD_MY_INFO_SUCCESS = "LOAD_MY_INFO_SUCCESS";
 export const LOAD_MY_INFO_FAILURE = "LOAD_MY_INFO_FAILURE";
 
+export const LOAD_USER_INFO_REQUEST = "LOAD_USER_INFO_REQUEST";
+export const LOAD_USER_INFO_SUCCESS = "LOAD_USER_INFO_SUCCESS";
+export const LOAD_USER_INFO_FAILURE = "LOAD_USER_INFO_FAILURE";
+
 
 export const LOAD_FOLLOWERS_REQUEST = "LOAD_FOLLOWERS_REQUEST";
 export const LOAD_FOLLOWERS_SUCCESS = "LOAD_FOLLOWERS_SUCCESS";
@@ -97,10 +102,6 @@ export const LOAD_FOLLOWERS_FAILURE = "LOAD_FOLLOWERS_FAILURE";
 export const LOAD_FOLLOWINGS_REQUEST = "LOAD_FOLLOWINGS_REQUEST";
 export const LOAD_FOLLOWINGS_SUCCESS = "LOAD_FOLLOWINGS_SUCCESS";
 export const LOAD_FOLLOWINGS_FAILURE = "LOAD_FOLLOWINGS_FAILURE";
-
-
-
-
 
 
 
@@ -163,7 +164,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
 
 
 
-        //브라우저 새로고침시  유저정보 가져오기
+        //브라우저 새로고침시  나의 정보 가져오기
         case LOAD_MY_INFO_REQUEST:
             draft.loadMyInfoLoading = true;
             draft.loadMyInfoDone = false;
@@ -180,6 +181,26 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
             draft.loadMyInfoLoading = false;
             draft.loadMyInfoError = action.error;
             break;
+
+
+        //브라우저 새로고침시  유저정보 가져오기
+        case LOAD_USER_INFO_REQUEST:
+            draft.loadUserInfoLoading = true;
+            draft.loadUserInfoDone = false;
+            draft.loadUserInfoError = null;
+            break;
+
+        case LOAD_USER_INFO_SUCCESS:
+            draft.loadUserInfoLoading = false;
+            draft.loadUserInfoDone = true;
+            draft.userInfo = action.data
+            break;
+
+        case LOAD_USER_INFO_FAILURE:
+            draft.loadUserInfoLoading = false;
+            draft.loadUserInfoError = action.error;
+            break;
+
 
 
         //팔로우

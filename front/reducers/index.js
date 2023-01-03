@@ -6,19 +6,23 @@ import post from './post';
 
 
 //(이전상태,액션)  => 다음 상태
-const rootReducer = combineReducers({
-    index: (state = {}, action) => {
-        switch (action.type) {
-            case HYDRATE:
-                console.log(' HYDRATE ', action);
-                return { ...state, ...action.payload };
-            default:
-                return state;
+const rootReducer = (state, action) => {
+    switch (action.type) {
+        case HYDRATE: {
+            // console.log('HYDRATE', action);
+            return action.payload;
         }
-    },
-    user,
-    post
-});
+
+        default: {
+            const combinedReducer = combineReducers({
+                user,
+                post
+            });
+            return combinedReducer(state, action);
+        }
+    }
+}
+
 
 export default rootReducer;
 

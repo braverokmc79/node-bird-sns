@@ -10,7 +10,8 @@ import {
     CHANGE_NICKNAME_REQUEST, CHANGE_NICKNAME_SUCCESS, CHANGE_NICKNAME_FAILURE,
     LOAD_FOLLOWERS_SUCCESS, LOAD_FOLLOWERS_FAILURE, LOAD_FOLLOWERS_REQUEST,
     LOAD_FOLLOWINGS_REQUEST, LOAD_FOLLOWINGS_SUCCESS, LOAD_FOLLOWINGS_FAILURE,
-    REMOVE_FOLLOW_REQUEST, REMOVE_FOLLOW_SUCCESS, REMOVE_FOLLOW_FAILURE
+    REMOVE_FOLLOW_REQUEST, REMOVE_FOLLOW_SUCCESS, REMOVE_FOLLOW_FAILURE,
+    LOAD_USER_INFO_REQUEST, LOAD_USER_INFO_SUCCESS, LOAD_USER_INFO_FAILURE,
 
 } from '../reducers/user';
 
@@ -94,7 +95,7 @@ function* watchChangeNickname() {
 
 
 
-//브라우저 새로고침시  유저정보 가져오기
+//브라우저 새로고침시  나의정보 가져오기
 function loadMyInfoAPI() {
     return axios.get('/user');
 }
@@ -116,6 +117,31 @@ function* loadMyInfo(action) {
 }
 function* watchLoadMyInfo() {
     yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
+}
+
+
+//브라우저 새로고침시  유저정보 가져오기
+function loadUserInfoAPI() {
+    return axios.get('/user');
+}
+function* loadUserInfo(action) {
+    try {
+        const result = yield call(loadUserInfoAPI)
+
+        yield put({
+            type: LOAD_USER_INFO_SUCCESS,
+            data: result.data
+        });
+
+    } catch (err) {
+        yield put({
+            type: LOAD_USER_INFO_FAILURE,
+            error: err.response.data
+        });
+    }
+}
+function* watchLoadUserInfo() {
+    yield takeLatest(LOAD_USER_INFO_REQUEST, loadUserInfo);
 }
 
 
@@ -337,8 +363,9 @@ export default function* userSaga() {
         fork(watchLogIn),
         fork(watchLogOut),
         fork(watchFollow),
-        fork(watchUnFollow),
+        fork(watchUnFollow),        
         fork(watchSignUp),
+        fork(watchLoadUserInfo),
         fork(watchLoadMyInfo),
         fork(watchChangeNickname),
         fork(watchRemoveFollow),
