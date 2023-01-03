@@ -147,7 +147,7 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
 
 //GET /post  한개 정보 가져오기
 router.get('/:postId', async (req, res, next) => {
-    console.log(" 한개의. 정보 가져오기 : ", req.params.postId);
+    //console.log(" 한개의. 정보 가져오기 : ", req.params.postId);
     try {
 
         const posts = await Post.findOne({
@@ -188,7 +188,6 @@ router.get('/:postId', async (req, res, next) => {
             ]
         });
 
-        console.log(" 한개의. 정보 posts : ", posts);
         res.status(200).json(posts);
     } catch (error) {
         console.error("posts error : ", error);
