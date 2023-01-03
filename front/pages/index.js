@@ -8,6 +8,8 @@ import { LOAD_MY_INFO_REQUEST } from './../reducers/user';
 import { LOAD_POSTS_REQUEST } from './../reducers/post';
 import { END } from 'redux-saga';
 import wrapper from '../store/configureStore';
+import axios from 'axios';
+
 
 const Home = () => {
     const dispatch = useDispatch();
@@ -64,10 +66,22 @@ const Home = () => {
 //초기 화면 랜더될때에는 리덕스에 데이터가 채워진체로 실행
 //다음 코드는 프론트 서버에서 실행
 //도메인이 다르면 쿠키전달 안된다.
-export const getServerSideProps = wrapper.getServerSideProps((store) => async () => {
+export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req, res, ...etc }) => {
 
     console.log('getServerSideProps start');
-    //console.log(context.req.headers);
+
+    //서버에 쿠키가 전달이 안된다. 따라서 새로고침시 로그인 풀리는 현상
+    //따라서 다음과 같은 코드로 서버에 쿠키값을 보내는 처리를 한다.
+    console.log(" store  :", store);
+
+    const cookie = req ? req.headers.cookie : '';
+    axios.defaults.headers.Cookie = ''; //*** 쿠키가 공유될수 있으므로 쿠키 초기화 필수
+    if (req && cookie) { //서버일때와 쿠키가 존재할때만  실행
+        axios.defaults.headers.Cookie = cookie;
+    }
+
+    console.log(" req cookie :", cookie);
+
 
     store.dispatch({
         type: LOAD_MY_INFO_REQUEST,

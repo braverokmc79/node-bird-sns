@@ -38,6 +38,7 @@ router.get('/', async (req, res, next) => {
         } else {
             res.status(200).json(null);
         }
+
     } catch (error) {
         console.error("/ 쿠키 정보 가져오기 에러 :  ", error);
         next(error);
@@ -98,7 +99,6 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
         });
 
     })(req, res, next);
-
 });
 
 
@@ -110,7 +110,6 @@ router.post('/logout', isLoggedIn, (req, res, next) => {
         req.session.destroy();
         res.send('ok')
     });
-
 });
 
 
