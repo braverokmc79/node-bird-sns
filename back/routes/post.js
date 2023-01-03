@@ -145,6 +145,60 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
 
 
 
+//GET /post  한개 정보 가져오기
+router.get('/:postId', async (req, res, next) => {
+    console.log(" 한개의. 정보 가져오기 : ", req.params.postId);
+    try {
+
+        const posts = await Post.findOne({
+            where: { id: req.params.postId },
+
+            include: [{
+                model: User,
+                attributes: ['id', 'nickname']
+            },
+            {
+                model: Image
+            },
+            {
+                model: Comment,
+                include: [{
+                    model: User,
+                    attributes: ['id', 'nickname']
+                }]
+            },
+            {
+                model: User, //좋아요 누른 사람       
+                as: 'Likers',
+                attributes: ['id']
+            },
+            {
+                model: Post,
+                as: 'Retweet',
+                include: [
+                    {
+                        model: User,
+                        attributes: ['id', 'nickname']
+                    },
+                    {
+                        model: Image
+                    }
+                ]
+            }
+            ]
+        });
+
+        console.log(" 한개의. 정보 posts : ", posts);
+        res.status(200).json(posts);
+    } catch (error) {
+        console.error("posts error : ", error);
+        next(error);
+    }
+
+});
+
+
+
 
 //POST 댓글  /post
 router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {     //POST /post/1/comment
@@ -199,8 +253,8 @@ router.patch('/:postId/like', isLoggedIn, async (req, res, next) => {  //PATcH  
         console.error(error);
         next(error);
     }
-
 });
+
 
 router.delete('/:postId/like', isLoggedIn, async (req, res, next) => {  //DELETE  /post/1/like
     try {

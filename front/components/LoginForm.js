@@ -1,4 +1,4 @@
-import React, { useCallback , useEffect} from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Form, Input, Button } from 'antd';
 import styled from 'styled-components';
 import Link from 'next/link';
@@ -25,11 +25,10 @@ const LoginForm = () => {
 
 
     useEffect(() => {
-        if(logInError){
+        if (logInError) {
             alert(logInError);
         }
     }, [logInError]);
-
 
 
 

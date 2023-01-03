@@ -5,6 +5,7 @@ import {
     ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE,
     REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE,
     LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE,
+    LOAD_POST_REQUEST, LOAD_POST_SUCCESS, LOAD_POST_FAILURE,
     LIKE_POST_REQUEST, LIKE_POST_SUCCESS, LIKE_POST_FAILURE,
     UNLIKE_POST_REQUEST, UNLIKE_POST_SUCCESS, UNLIKE_POST_FAILURE,
     UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE, generateDummyPost,
@@ -176,6 +177,34 @@ function* watchLoadPosts() {
 
 
 
+//한개의 POST 정보 불러오기
+function loadPostAPI(postId) {
+    return axios.get(`/post/${postId}`);
+}
+
+function* loadPost(action) {
+    try {
+        
+        const result = yield call(loadPostAPI, action.postId);
+        yield put({
+            type: LOAD_POST_SUCCESS,
+            data: result.data
+        });
+    } catch (err) {
+        console.log(err);
+        yield put({
+            type: LOAD_POST_FAILURE,
+            error: err.response.data
+        });
+    }
+}
+
+function* watchLoadPost() {
+    yield takeLatest(LOAD_POST_REQUEST, loadPost);
+}
+
+
+
 
 
 
@@ -302,6 +331,7 @@ export default function* postSaga() {
         fork(watchAddComment),
         fork(watchRemovePost),
         fork(watchLoadPosts),
+        fork(watchLoadPost),
         fork(watchLikePost),
         fork(watchUnlikePost),
         fork(watchRetweet)
