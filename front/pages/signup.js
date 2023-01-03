@@ -3,12 +3,15 @@ import React, { useCallback, useState, useEffect } from 'react';
 import Router from 'next/router';
 import AppLayout from '../components/AppLayout';
 import { Form, Input, Checkbox, Button } from 'antd';
-import useInput from '../hooks/useInput';
 import styled from 'styled-components';
-import { SIGN_UP_REQUEST } from './../reducers/user';
+import { SIGN_UP_REQUEST, LOAD_MY_INFO_REQUEST } from './../reducers/user';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik } from "formik";
 import useSimpleValidation from "../components/Validation/UseSimpleValidation";
+import { END } from 'redux-saga';
+import wrapper from '../store/configureStore';
+import axios from 'axios';
+
 
 const ErroMessage = styled.div`
     color:red;
@@ -217,5 +220,22 @@ const SignUp = () => {
     );
 };
 
+
+
+//새로 고침시 유지
+export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req, res, ...etc }) => {
+    const cookie = req ? req.headers.cookie : '';
+    axios.defaults.headers.Cookie = '';
+    if (req && cookie) {
+        axios.defaults.headers.Cookie = cookie;
+    }
+
+    store.dispatch({
+        type: LOAD_MY_INFO_REQUEST,
+    });
+
+    store.dispatch(END);
+    await store.sagaTask.toPromise();
+})
 
 export default SignUp;

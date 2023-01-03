@@ -46,6 +46,56 @@ router.get('/', async (req, res, next) => {
 });
 
 
+
+
+//특정 유저 정보 가져오기
+router.get('/:userId', async (req, res, next) => {
+    console.log(" 유저 정보 가져오기 : ", req.params.userId);
+    try {
+        const fullUserWithoutPassword = await User.findOne({
+            where: {
+                id: req.params.userId
+            },
+            attributes: {
+                exclude: ['password']
+            },
+            include: [{
+                model: Post,
+                attributes: ['id'],
+            }, {
+                model: User,
+                as: "Followers",
+                attributes: ['id'],
+            },
+            {
+                model: User,
+                as: "Followings",
+                attributes: ['id'],
+            }
+            ]
+        })
+
+        if (fullUserWithoutPassword) {
+            const data = fullUserWithoutPassword.toJSON();
+
+            //개인정보 침해 예방을 위해 서버에서  데이터길이만 변경해서 보내 준다.
+            data.Posts = data.Posts.length;
+            data.Followings = data.Followings.length;
+            data.Followers = data.Followers.length;
+
+            res.status(200).json(data);
+        } else {
+            res.status(404).json("존재하지 않는 사용자입니다.");
+        }
+    } catch (error) {
+        console.error("/ 쿠키 정보 가져오기 에러 :  ", error);
+        next(error);
+    }
+});
+
+
+
+
 //passport.authenticate 미들웨어는 (req, res, next) 사용할수 없는 미들웨어인데 다음과 미들웨어 확장 같은 설정으로 사용
 //POST  /user/login
 router.post('/login', isNotLoggedIn, (req, res, next) => {

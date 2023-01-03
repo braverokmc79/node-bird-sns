@@ -120,13 +120,14 @@ function* watchLoadMyInfo() {
 }
 
 
-//브라우저 새로고침시  유저정보 가져오기
-function loadUserInfoAPI() {
-    return axios.get('/user');
+// 유저정보 가져오기
+function loadUserInfoAPI(userId) {
+    console.log("사가 유저 정보 가져오기  : ", userId);
+    return axios.get(`/user/${userId}`);
 }
 function* loadUserInfo(action) {
     try {
-        const result = yield call(loadUserInfoAPI)
+        const result = yield call(loadUserInfoAPI , action.data);
 
         yield put({
             type: LOAD_USER_INFO_SUCCESS,
@@ -363,7 +364,7 @@ export default function* userSaga() {
         fork(watchLogIn),
         fork(watchLogOut),
         fork(watchFollow),
-        fork(watchUnFollow),        
+        fork(watchUnFollow),
         fork(watchSignUp),
         fork(watchLoadUserInfo),
         fork(watchLoadMyInfo),
