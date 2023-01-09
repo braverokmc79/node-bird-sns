@@ -122,12 +122,12 @@ function* watchLoadMyInfo() {
 
 // 유저정보 가져오기
 function loadUserInfoAPI(userId) {
-    console.log("사가 유저 정보 가져오기  : ", userId);
+    //console.log("사가 유저 정보 가져오기  : ", userId);
     return axios.get(`/user/${userId}`);
 }
 function* loadUserInfo(action) {
     try {
-        const result = yield call(loadUserInfoAPI , action.data);
+        const result = yield call(loadUserInfoAPI, action.data);
 
         yield put({
             type: LOAD_USER_INFO_SUCCESS,
@@ -269,7 +269,7 @@ function* login(action) {
 //1-3 로그인 처리
 function* watchLogIn() {
     //LOG_IN 실행 될때 까지 기다리겠다.
-    console.log("2. watchLogIn ");
+    //console.log("2. watchLogIn ");
     yield takeLatest(LOG_IN_REQUEST, login);
 }
 

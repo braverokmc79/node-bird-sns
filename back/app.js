@@ -10,6 +10,7 @@ const dotenv = require('dotenv');
 const postRouter = require('./routes/post');
 const postsRouter = require('./routes/posts');
 const userRouter = require('./routes/user');
+const hashRouter = require('./routes/hashtag');
 const path = require('path');
 
 dotenv.config();
@@ -60,6 +61,7 @@ app.get('/', (req, res) => {
 app.use('/post', postRouter);
 app.use('/posts', postsRouter);
 app.use('/user', userRouter);
+app.use('/hashtag', hashRouter);
 
 
 

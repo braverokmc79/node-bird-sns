@@ -2,6 +2,7 @@ import React from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
 
+
 export default class MyDocument extends Document {
     static async getInitialProps(ctx) {
         const searchQuery = ctx.q?.toString();
@@ -35,7 +36,7 @@ export default class MyDocument extends Document {
         return (
             <Html>
                 <Head>
-                    <title>My new cool app</title>
+                    {/* <title>My new cool app</title> */}
                 </Head>
 
                 <body>

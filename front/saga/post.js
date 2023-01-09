@@ -9,12 +9,73 @@ import {
     LIKE_POST_REQUEST, LIKE_POST_SUCCESS, LIKE_POST_FAILURE,
     UNLIKE_POST_REQUEST, UNLIKE_POST_SUCCESS, UNLIKE_POST_FAILURE,
     UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE, generateDummyPost,
-    RETWEET_REQUEST, RETWEET_SUCCESS, RETWEET_FAILURE
+    RETWEET_REQUEST, RETWEET_SUCCESS, RETWEET_FAILURE,
+    LOAD_USER_POSTS_REQUEST, LOAD_USER_POSTS_SUCCESS, LOAD_USER_POSTS_FAILURE,
+    LOAD_HASHTAG_POSTS_REQUEST, LOAD_HASHTAG_POSTS_SUCCESS, LOAD_HASHTAG_POSTS_FAILURE
+
 } from '../reducers/post'
 
 import {
     ADD_POST_TO_ME, REMOVE_POST_OF_ME
 } from '../reducers/user';
+
+
+
+//해시 태그에 대한  게시글 목록
+function loadHashtagPostsAPI(data, lastId) {
+    return axios.get(`/hashtag/${encodeURIComponent(data)}?lastId=${lastId || 0}`);
+}
+function* loadHashtagPosts(action) {
+    try {
+        const result = yield call(loadHashtagPostsAPI, action.data, action.lastId);
+        yield put({
+            type: LOAD_HASHTAG_POSTS_SUCCESS,
+            data: result.data
+        });
+
+    } catch (err) {
+        console.log(err);
+        yield put({
+            type: LOAD_HASHTAG_POSTS_FAILURE,
+            error: err.response.data
+        });
+    }
+}
+function* watchLoadHashtagPosts() {
+    yield takeLatest(LOAD_HASHTAG_POSTS_REQUEST, loadHashtagPosts);
+}
+
+
+//특정 사용자에 대한 게시글
+function loadUserPostsAPI(data, lastId) {
+    return axios.get(`/user/${data}/posts?lastId=${lastId || 0}`);
+}
+function* loadUserPosts(action) {
+    try {
+        const result = yield call(loadUserPostsAPI, action.data, action.lastId);
+        yield put({
+            type: LOAD_USER_POSTS_SUCCESS,
+            data: result.data
+        });
+    } catch (err) {
+        console.log(err);
+        yield put({
+            type: LOAD_USER_POSTS_FAILURE,
+            error: err.response.data
+        });
+    }
+}
+function* watchLoadUserPosts() {
+    yield takeLatest(LOAD_USER_POSTS_REQUEST, loadUserPosts);
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -41,6 +102,9 @@ function* retweet(action) {
 function* watchRetweet() {
     yield takeLatest(RETWEET_REQUEST, retweet);
 }
+
+
+
 
 
 
@@ -184,7 +248,7 @@ function loadPostAPI(postId) {
 
 function* loadPost(action) {
     try {
-        
+
         const result = yield call(loadPostAPI, action.postId);
         yield put({
             type: LOAD_POST_SUCCESS,
@@ -334,7 +398,9 @@ export default function* postSaga() {
         fork(watchLoadPost),
         fork(watchLikePost),
         fork(watchUnlikePost),
-        fork(watchRetweet)
+        fork(watchRetweet),
+        fork(watchLoadHashtagPosts),
+        fork(watchLoadUserPosts)
     ]);
 }
 
