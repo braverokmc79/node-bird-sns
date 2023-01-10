@@ -33,6 +33,7 @@
     "shortid": "^2.2.16",
     "slick-carousel": "^1.8.1",
     "styled-components": "^5.3.6",
+    "swr": "^2.0.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {

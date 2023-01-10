@@ -48,6 +48,40 @@ router.get('/', async (req, res, next) => {
 
 
 
+//팔로워 불러워기
+router.get('/followers', isLoggedIn, async (req, res, next) => { //get  /user/followers
+    console.log(" 팔로워 불러워기  followers   : ");
+    try {
+        //패스포트에 로그인한 user id  값 :  req.user.id
+        const user = await User.findOne({ where: { id: req.user.id } });
+        //3개씩 불러오기
+        const followers = await user.getFollowers({
+            limit: parseInt(req.query.limit, 10)
+        });
+        res.status(200).json(followers)
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+
+
+// 팔로잉 불러워기 시퀄라이즈에서 다음과 같이 Followings  처리를 해서  getFollowings 적용 됨
+router.get('/followings', isLoggedIn, async (req, res, next) => { //get  /user/followings
+    try {
+        const user = await User.findOne({ where: { id: req.user.id } });
+        const followings = await user.getFollowings({
+            limit: parseInt(req.query.limit, 10)
+        });
+        res.status(200).json(followings);
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+
 
 //특정 유저 정보 하나 가져오기
 router.get('/:userId', async (req, res, next) => {
@@ -356,33 +390,6 @@ router.delete('/follower/:userId', isLoggedIn, async (req, res, next) => { //DEL
 
 
 
-
-//팔로워 불러워기
-router.get('/followers', isLoggedIn, async (req, res, next) => { //get  /user/followers
-    try {
-        //패스포트에 로그인한 user id  값 :  req.user.id
-        const user = await User.findOne({ where: { id: req.user.id } });
-        const followers = await user.getFollowers();
-        res.status(200).json(followers)
-    } catch (error) {
-        console.error(error);
-        next(error);
-    }
-});
-
-
-
-// 팔로잉 불러워기 시퀄라이즈에서 다음과 같이 Followings  처리를 해서  getFollowings 적용 됨
-router.get('/followings', isLoggedIn, async (req, res, next) => { //get  /user/followings
-    try {
-        const user = await User.findOne({ where: { id: req.user.id } });
-        const followings = await user.getFollowings();
-        res.status(200).json(followings);
-    } catch (error) {
-        console.error(error);
-        next(error);
-    }
-});
 
 
 
