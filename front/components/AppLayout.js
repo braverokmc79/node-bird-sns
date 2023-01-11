@@ -2,48 +2,54 @@ import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link'
 import { Menu, Input, Row, Col } from 'antd';
-
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-
-
+import Router from 'next/router';
 import UserProfile from './UserProfile';
 import LoginForm from './LoginForm';
+import useInput from '../hooks/useInput';
 
 const SearchInput = styled(Input.Search)`
     vertical-align: 'middle' ;
 `;
 
-
-
 const AppLayout = ({ children }) => {
-
+    const [searchInput, onChangeSearchInput] = useInput('');
     const { me } = useSelector((state) => state.user);
 
     const onClick = useCallback((e) => {
-        console.log('click ', e);
-        //setCurrent(e.key);
-    }, []);
+        if (e.key === "item-4") {
+            if (searchInput) {
+                // onChangeSearchInput("sdfsdf");
+                console.log("검색어: ", searchInput);
+                Router.push(`/hashtag/${searchInput}`);
+            }
+        }
+    }, [searchInput]);
+
+
 
     const items = [
-        { label: <Link href="/">노드버드</Link>, key: 'item-1' },
+        { label: <Link href="/" >노드버드</Link>, key: 'item-1' },
         me && { label: <Link href="/profile">프로필</Link>, key: 'item-2' },
+        !me && { label: <Link href="/signup">회원가입</Link>, key: 'item-3' },
         {
-            label: <SearchInput enterButton />,
-            key: 'item-3'
-        },
-        !me && { label: <Link href="/signup">회원가입</Link>, key: 'item-4' },
+            label: <SearchInput enterButton value={searchInput} onChange={onChangeSearchInput} />,
+            key: 'item-4'
+        }
     ];
-
 
     return (
         <div>
+
             <Menu onClick={onClick} mode="horizontal" items={items} />
+
             <Row gutter={24} style={{ marginTop: 20 }}>
                 <Col xs={24} md={6} style={{ marginTop: 20 }}>
                     Hello.Next
                 </Col>
             </Row>
+
             <Row gutter={24} style={{ marginTop: 20 }}>
                 <Col xs={24} md={6} style={{ marginTop: 20 }}>
                     {me ? <UserProfile /> : <LoginForm />}
@@ -63,8 +69,8 @@ const AppLayout = ({ children }) => {
 
         </div>
     );
-
 };
+
 
 AppLayout.prototype = {
     children: PropTypes.node.isRequired

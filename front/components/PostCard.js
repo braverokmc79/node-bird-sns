@@ -11,6 +11,8 @@ import PostCardContent from './PostCardContent';
 import { REMOVE_POST_REQUEST } from '../reducers/post';
 import FollowButton from './FollowButton';
 import { LIKE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_REQUEST, LOAD_POSTS_REQUEST } from '../reducers/post';
+import Link from 'next/link';
+
 
 const Global = createGlobalStyle`
     .ant-card-actions{
@@ -58,8 +60,6 @@ const PostCard = ({ post }) => {
 
 
     const onRemovePost = useCallback(async () => {
-
-
         if (window.confirm("정말 삭제 하시겠습니까?")) {
             console.log(1);
             dispatch({
@@ -73,8 +73,6 @@ const PostCard = ({ post }) => {
             }, 300);
 
         }
-
-
     }, [post.id, mainPosts]);
 
 
@@ -87,9 +85,6 @@ const PostCard = ({ post }) => {
         });
 
     }, [id]);
-
-
-
 
 
     const content = (
@@ -135,7 +130,10 @@ const PostCard = ({ post }) => {
                     >
 
                         <Card.Meta
-                            avatar={<Avatar>{post.Retweet.User.nickname[0]}</Avatar>}
+                            avatar={
+                                <Link href={`/user/${post.Retweet.User.id}`}>
+                                    <Avatar>{post.Retweet.User.nickname[0]}</Avatar>
+                                </Link>}
                             title={post.Retweet.User.nickname}
                             description={<PostCardContent postData={post.Retweet.content} />}
                         />
@@ -143,7 +141,11 @@ const PostCard = ({ post }) => {
                     </Card>
                 ) :
                     <Card.Meta
-                        avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
+                        avatar={
+                            <Link href={`/user/${post.User.id}`}>
+                                <Avatar>{post.User.nickname[0]}</Avatar>
+                            </Link>
+                        }
                         title={post.User.nickname}
                         description={<PostCardContent postData={post.content} />}
                     />
@@ -154,26 +156,32 @@ const PostCard = ({ post }) => {
 
 
 
-            {commentFormOpened && (
-                <div>
+            {
+                commentFormOpened && (
+                    <div>
 
-                    <CommentForm post={post} />
-                    <List
-                        header={`${post.Comments.length} 개의 댓글`}
-                        itemLayout="horizontal"
-                        dataSource={post.Comments}
-                        renderItem={(item) => (
-                            <li>
-                                <Comment
-                                    author={item.User.nickname}
-                                    avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
-                                    content={item.content}
-                                />
-                            </li>
-                        )}
-                    />
-                </div>
-            )}
+                        <CommentForm post={post} />
+                        <List
+                            header={`${post.Comments.length} 개의 댓글`}
+                            itemLayout="horizontal"
+                            dataSource={post.Comments}
+                            renderItem={(item) => (
+                                <li>
+                                    <Comment
+                                        author={item.User.nickname}
+                                        avatar={
+                                            <Link href={`/user/${item.User.id}`}>
+                                                <Avatar>{item.User.nickname[0]}</Avatar>
+                                            </Link>
+                                        }
+                                        content={item.content}
+                                    />
+                                </li>
+                            )}
+                        />
+                    </div>
+                )
+            }
 
             {/* <CommentForm />
             <Comments /> */}

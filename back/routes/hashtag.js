@@ -8,6 +8,17 @@ const router = express.Router();
 
 //GET /hashtag  /노드
 router.get('/:hashtag', async (req, res, next) => {
+    console.log(" /hashtag  /노드  :  ", decodeURIComponent(req.params.hashtag));
+    let hashtag = decodeURIComponent(req.params.hashtag);
+
+    //다음과 같은 형식으로 파라미터를 받을 경우
+    // /_next/data/development리액트.json?tag=리액트
+    if (hashtag.indexOf("tag=") !== -1) {
+        hashtag = hashtag.split("tag=");
+        hashtag = hashtag[1];
+        console.log("문자열 포함  :hashtag  => ", hashtag);
+    }
+
     try {
         const where = {};
         if (parseInt(req.query.lastId, 10)) { //초기 로딩이 아닐때
@@ -23,11 +34,11 @@ router.get('/:hashtag', async (req, res, next) => {
             include: [
                 {
                     model: Hashtag,
-                    where: { name: decodeURIComponent(req.params.hashtag) }
+                    where: { name: hashtag },
                 },
                 {
                     model: User,
-                    attributes: ['id', 'nickname']
+                    attributes: ['id', 'nickname'],
                 },
                 {
                     model: Image

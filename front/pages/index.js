@@ -67,11 +67,11 @@ const Home = () => {
 //도메인이 다르면 쿠키전달 안된다.
 export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req, res, ...etc }) => {
 
-    console.log('getServerSideProps start');
+    //console.log('getServerSideProps start');
 
     //서버에 쿠키가 전달이 안된다. 따라서 새로고침시 로그인 풀리는 현상
     //따라서 다음과 같은 코드로 서버에 쿠키값을 보내는 처리를 한다.
-    console.log(" store  :", store);
+    // console.log(" store  :", store);
 
     const cookie = req ? req.headers.cookie : '';
     axios.defaults.headers.Cookie = ''; //*** 쿠키가 공유될수 있으므로 쿠키 초기화 필수
