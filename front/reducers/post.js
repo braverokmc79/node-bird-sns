@@ -1,8 +1,7 @@
-import shortid from 'shortid';
+//import shortid from 'shortid';
 import produce from 'immer';
-import { faker } from '@faker-js/faker';
-
-faker.seed(123);
+// import { faker } from '@faker-js/faker';
+// faker.seed(123);
 
 export const initialState = {
     mainPosts: [],
@@ -48,38 +47,37 @@ export const initialState = {
 }
 
 
-export const generateDummyPost = (number) => Array(10).fill().map(() => ({
-    id: shortid.generate(),
-    User: {
-        id: shortid.generate(),
-        nickname: faker.internet.userName()
-    },
-    content: faker.lorem.paragraph(),
-    Images: [{
-        id: shortid.generate(),
-        src: 'https://picsum.photos/600/400?random=' + Math.floor(Math.random() * 1000) + 1,
-        onerror: "https://via.placeholder.com/600x400"
-    },
-    {
-        id: shortid.generate(),
-        src: 'https://picsum.photos/600/400?random=' + Math.floor(Math.random() * 1000) + 1,
-        onerror: "https://via.placeholder.com/600x400"
-    }
-    ],
-    Comments: [{
-        id: shortid.generate(),
-        User: {
-            nickname: faker.internet.userName()
-        },
-        content: faker.lorem.paragraph()
-    }],
+// export const generateDummyPost = (number) => Array(10).fill().map(() => ({
+//     id: shortid.generate(),
+//     User: {
+//         id: shortid.generate(),
+//         nickname: faker.internet.userName()
+//     },
+//     content: faker.lorem.paragraph(),
+//     Images: [{
+//         id: shortid.generate(),
+//         src: 'https://picsum.photos/600/400?random=' + Math.floor(Math.random() * 1000) + 1,
+//         onerror: "https://via.placeholder.com/600x400"
+//     },
+//     {
+//         id: shortid.generate(),
+//         src: 'https://picsum.photos/600/400?random=' + Math.floor(Math.random() * 1000) + 1,
+//         onerror: "https://via.placeholder.com/600x400"
+//     }
+//     ],
+//     Comments: [{
+//         id: shortid.generate(),
+//         User: {
+//             nickname: faker.internet.userName()
+//         },
+//         content: faker.lorem.paragraph()
+//     }],
 
-    Likers: [
-        { id: 0 }
-    ]
+//     Likers: [
+//         { id: 0 }
+//     ]
 
-}));
-
+// }));
 
 // initialState.mainPosts = initialState.mainPosts.concat(
 //     generateDummyPost(10)
@@ -352,7 +350,6 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
             break;
 
         case REMOVE_POST_SUCCESS:
-            console.log(" s 게시글 삭제 : ", action.data);
             draft.mainPosts = draft.mainPosts.filter((v) => v.id !== action.data);
             draft.removePostLoading = false;
             draft.removePostDone = true;

@@ -12,6 +12,7 @@ import rootSaga from '../saga';
 //     return next(action);
 // };
 
+
 const configureSotre = () => {
     const sagaMiddleware = createSagaMiddleware();
     const middlewares = [sagaMiddleware];
@@ -19,11 +20,12 @@ const configureSotre = () => {
         ? compose(applyMiddleware(...middlewares))
         : composeWithDevTools(applyMiddleware(...middlewares));
 
+    // const store = createStore(reducer, enhancer);
     const store = createStore(reducer, enhancer);
+
     store.sagaTask = sagaMiddleware.run(rootSaga);
     return store;
 };
-
 
 const wrapper = createWrapper(configureSotre, {
     debug: process.env.NODE_ENV === 'development,'

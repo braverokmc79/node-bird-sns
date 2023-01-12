@@ -12,6 +12,8 @@ import { REMOVE_POST_REQUEST } from '../reducers/post';
 import FollowButton from './FollowButton';
 import { LIKE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_REQUEST, LOAD_POSTS_REQUEST } from '../reducers/post';
 import Link from 'next/link';
+import moment from 'moment';
+
 
 
 const Global = createGlobalStyle`
@@ -25,6 +27,7 @@ const Global = createGlobalStyle`
     }
 `;
 
+moment.locale("ko");
 
 
 const PostCard = ({ post }) => {
@@ -33,6 +36,9 @@ const PostCard = ({ post }) => {
     const [commentFormOpened, setCommentFormOpened] = useState(false);
     const id = useSelector((state) => state.user.me?.id);
     const liked = post.Likers.find((v) => v.id === id);
+
+
+
 
     const onLike = useCallback(() => {
         if (!id) return alert("로그인이 필요합니다.");
@@ -129,6 +135,9 @@ const PostCard = ({ post }) => {
                         style={{ background: '#eee' }}
                     >
 
+                        <div style={{ float: 'right' }}>
+                            {moment(post.createdAt).format('YYYY.MM.DD')}
+                        </div>
                         <Card.Meta
                             avatar={
                                 <Link href={`/user/${post.Retweet.User.id}`}>
@@ -140,15 +149,18 @@ const PostCard = ({ post }) => {
 
                     </Card>
                 ) :
-                    <Card.Meta
-                        avatar={
-                            <Link href={`/user/${post.User.id}`}>
-                                <Avatar>{post.User.nickname[0]}</Avatar>
-                            </Link>
-                        }
-                        title={post.User.nickname}
-                        description={<PostCardContent postData={post.content} />}
-                    />
+                    <>
+                        <div style={{ float: 'right' }}>{moment(post.createdAt).format('YYYY.MM.DD')}</div>
+                        <Card.Meta
+                            avatar={
+                                <Link href={`/user/${post.User.id}`}>
+                                    <Avatar>{post.User.nickname[0]}</Avatar>
+                                </Link>
+                            }
+                            title={post.User.nickname}
+                            description={<PostCardContent postData={post.content} />}
+                        />
+                    </>
 
                 }
                 <Image />
@@ -175,7 +187,12 @@ const PostCard = ({ post }) => {
                                             </Link>
                                         }
                                         content={item.content}
-                                    />
+                                    >
+
+                                        <div style={{ float: 'right' }}>
+                                            {moment(post.createdAt).format('YYYY.MM.DD')}
+                                        </div>
+                                    </Comment>
                                 </li>
                             )}
                         />

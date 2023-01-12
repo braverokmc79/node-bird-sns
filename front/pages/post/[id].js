@@ -10,8 +10,6 @@ import { END } from 'redux-saga';
 import wrapper from '../../store/configureStore';
 import axios from 'axios';
 
-
-
 const Post = () => {
     const router = useRouter();
     const { id } = router.query;
@@ -61,8 +59,6 @@ const Post = () => {
 // }
 
 
-
-
 //getServerSideProps
 
 // export const getStaticProps = wrapper.getStaticProps(async (context) => {
@@ -85,11 +81,8 @@ const Post = () => {
 //     await context.store.sagaTask.toPromise();
 // });
 
-
 //새로 고침시 유지
 export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req, res, ...etc }) => {
-
-    console.log(" reqreqreqreq    ", req);
 
     const cookie = req ? req.headers.cookie : '';
     axios.defaults.headers.Cookie = '';
@@ -100,7 +93,6 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async ({
     store.dispatch({
         type: LOAD_MY_INFO_REQUEST,
     });
-
 
     store.dispatch({
         type: LOAD_POST_REQUEST,

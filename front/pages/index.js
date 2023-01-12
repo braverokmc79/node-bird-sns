@@ -79,7 +79,7 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async ({
         axios.defaults.headers.Cookie = cookie;
     }
 
-    console.log(" req cookie :", cookie);
+    //console.log(" req cookie :", cookie);
 
 
     store.dispatch({
@@ -93,7 +93,7 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async ({
 
     //다음 코드는 nextjs  문서
     store.dispatch(END);
-    console.log('getServerSideProps end');
+    //console.log('getServerSideProps end');
     await store.sagaTask.toPromise();
 })
 
