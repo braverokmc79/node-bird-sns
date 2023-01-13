@@ -43,7 +43,6 @@ const Profile = () => {
     }, []);
 
 
-
     if (!me) {
         return '내 정보 로딩중...';
     }

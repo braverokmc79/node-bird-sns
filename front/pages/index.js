@@ -95,6 +95,9 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async ({
     store.dispatch(END);
     //console.log('getServerSideProps end');
     await store.sagaTask.toPromise();
+
+
+    return { props: { data: 123 } }
 })
 
 export default Home;
