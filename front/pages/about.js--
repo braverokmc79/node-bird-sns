@@ -5,8 +5,8 @@ import { END } from 'redux-saga';
 
 import { Avatar, Card } from 'antd';
 import AppLayout from '../components/AppLayout';
-import wrapper from '../store/configureStore';
-import { LOAD_USER_INFO_REQUEST } from '../reducers/user';
+// import wrapper from '../store/configureStore';
+// import { LOAD_USER_INFO_REQUEST } from '../reducers/user';
 
 const Profile = () => {
     const { userInfo } = useSelector((state) => state.user);
@@ -49,15 +49,15 @@ const Profile = () => {
     );
 };
 
-export const getStaticProps = wrapper.getStaticProps((store) => async (req, res, ...etc) => {
-    console.log('getStaticProps  : static 으로 특정한 사용자 정보 가져오기  1 번 유저  : ');
-    store.dispatch({
-        type: LOAD_USER_INFO_REQUEST,
-        data: 1,
-    });
-    store.dispatch(END);
-    await store.sagaTask.toPromise();
-});
+// export const getStaticProps = wrapper.getStaticProps((store) => async (req, res, ...etc) => {
+//     console.log('getStaticProps  : static 으로 특정한 사용자 정보 가져오기  1 번 유저  : ');
+//     store.dispatch({
+//         type: LOAD_USER_INFO_REQUEST,
+//         data: 1,
+//     });
+//     store.dispatch(END);
+//     await store.sagaTask.toPromise();
+// });
 
 
 export default Profile;
