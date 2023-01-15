@@ -12,6 +12,10 @@ const postsRouter = require('./routes/posts');
 const userRouter = require('./routes/user');
 const hashRouter = require('./routes/hashtag');
 const path = require('path');
+const hpp = require('hpp');
+const helmet = require('helmet');
+const morgan = require('morgan');
+
 
 dotenv.config();
 const app = express();
@@ -23,12 +27,7 @@ db.sequelize.sync()
     })
     .catch(console.error);
 
-app.use(cors({
-    //origin: 'https://nodebird.com'
-    // origin: true, // orign: true 로 설정해두면 * 대신 보낸 곳의 주소가 자동으로 들어가 편리합니다.
-    origin: "http://localhost:3060",
-    credentials: true
-}));
+
 
 //express 에 static 함수가 존재   path.join 을 하면 운영체제 상관없이 경로설정을 잡아준다.
 app.use('/', express.static(path.join(__dirname, 'uploads')));
@@ -49,6 +48,28 @@ app.use(passport.session());
 passportConfig();
 
 
+if (process.env.NODE_ENV === 'production') {
+    console.log(" production 실행 ");
+    app.use(morgan('combined'));
+    app.use(hpp());
+    app.use(helmet({ contentSecurityPolicy: false }));
+    app.use(cors({
+        //origin: 'https://nodebird.com'
+        // origin: true, // orign: true 로 설정해두면 * 대신 보낸 곳의 주소가 자동으로 들어가 편리합니다.
+        origin: ["http://localhost:3060", "http://192.168.120.137:3065"],
+        credentials: true
+    }));
+
+} else {
+    console.log(" dev 실행 ");
+    app.use(morgan('dev'));
+    app.use(cors({
+        //origin: 'https://nodebird.com'
+        // origin: true, // orign: true 로 설정해두면 * 대신 보낸 곳의 주소가 자동으로 들어가 편리합니다.
+        origin: ["http://localhost:3060"],
+        credentials: true
+    }));
+}
 
 
 
@@ -62,8 +83,6 @@ app.use('/post', postRouter);
 app.use('/posts', postsRouter);
 app.use('/user', userRouter);
 app.use('/hashtag', hashRouter);
-
-
 
 
 
