@@ -21,8 +21,8 @@ const Profile = () => {
     const [followersLimit, setFollowersLimit] = useState(3);
     const [followingsLimit, setFollowingsLimit] = useState(3);
 
-    const { data: followingsData, error: followingError } = useSWR(`${backUrl}/user/followings?limit=${followingsLimit}`, fetcher);
-    const { data: followersData, error: followerError } = useSWR(`${backUrl}/user/followers?limit=${followersLimit}`, fetcher);
+    const { data: followingsData, error: followingError } = useSWR(`${backURL}/user/followings?limit=${followingsLimit}`, fetcher);
+    const { data: followersData, error: followerError } = useSWR(`${backURL}/user/followers?limit=${followersLimit}`, fetcher);
 
 
 
@@ -63,8 +63,12 @@ const Profile = () => {
                 {/* <FollowList header="팔로잉" data={me.Followings} />
                 <FollowList header="팔로워" data={me.Followers} /> */}
 
-                <FollowList header="팔로잉" data={followingsData} onClickMore={loadMoreFollowings} loading={!followingsData && !followingError} />
-                <FollowList header="팔로워" data={followersData} onClickMore={loadMoreFollowers} loading={!followersData && !followerError} />
+                { followingsData &&
+                   <FollowList header="팔로잉" data={followingsData} onClickMore={loadMoreFollowings} loading={!followingsData && !followingError} />
+                 }
+                {followersData && 
+                    <FollowList header="팔로워" data={followersData} onClickMore={loadMoreFollowers} loading={!followersData && !followerError} />
+                 }
             </AppLayout>
         </>
     );
