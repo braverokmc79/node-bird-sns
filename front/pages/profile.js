@@ -10,10 +10,10 @@ import { END } from 'redux-saga';
 import wrapper from '../store/configureStore';
 import axios from 'axios';
 import useSWR from 'swr';
-
+import { backURL } from '../config/config';
 
 const fetcher = (url) => axios.get(url, { withCredentials: true }).then((result) => result.data);
-const backUrl = 'http://localhost:3065';
+
 
 
 const Profile = () => {

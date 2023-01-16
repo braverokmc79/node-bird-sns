@@ -3,7 +3,7 @@ import { Form, Input, Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { addPost, ADD_POST_REQUEST, UPLOAD_IMAGES_REQUEST, REMOVE_IMAGE } from '../reducers/post';
 import useInput from '../hooks/useInput';
-
+import { backURL } from '../config/config';
 
 const PostForm = () => {
     const { imagePaths, addPostDone, addPostLoading, addPostError, LOAD_POSTS_REQUEST, mainPosts } = useSelector((state) => state.post);
@@ -106,7 +106,7 @@ const PostForm = () => {
                 {
                     imagePaths.map((v, i) => (
                         <div key={v} style={{ display: "inline-block" }}>
-                            <img src={`http://localhost:3065/${v}`} style={{ width: 'auto', marginRight: '5px', height: '125px' }} alt={v} />
+                            <img src={`${backURL}/${v}`} style={{ width: 'auto', marginRight: '5px', height: '125px' }} alt={v} />
                             <div>
                                 <Button onClick={onRemoveImage(i)}>제거</Button>
                             </div>

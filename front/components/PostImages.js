@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { PlusOutlined } from '@ant-design/icons';
 import ImagesZoom from "./ImagesZoom"
 import styled from 'styled-components';
-
+import { backURL } from '../config/config';
 
 const ImgDiv = styled.div`
     display:flex !important;
@@ -16,7 +16,7 @@ const ImgDiv = styled.div`
     }
 `;
 
-export const ImageURL = `http://localhost:3065/`;
+export const ImageURL = `${backURL}`;
 
 const PostImages = ({ images }) => {
 
