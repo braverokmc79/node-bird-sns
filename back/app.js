@@ -49,7 +49,7 @@ app.use(session({
         //**쿠키를 저장할 도메인 설정
         //http://192.168.120.136/
         //domain: process.env.NODE_ENV === 'production' && '.mynodebird.com'
-        domain: process.env.NODE_ENV === 'production' && '192.168.120.136'
+        domain: process.env.NODE_ENV === 'production' && 'macaronics.iptime.org'
     }
 }));
 
