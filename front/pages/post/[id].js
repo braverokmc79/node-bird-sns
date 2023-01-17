@@ -21,21 +21,21 @@ const Post = () => {
 
     return (
         <AppLayout>
-            {singlePost &&
-                <Head>
-                    <title>
-                        {singlePost.User.nickname}
-                        님의 글
-                    </title>
-                    <meta name="description" content={singlePost.content} />
-                    <meta property="og:title" content={`${singlePost.User.nickname}님의 게시글`} />
-                    <meta property="og:description" content={singlePost.content} />
-                    <meta property="og:image" content={singlePost.Images[0] ? singlePost.Images[0].src : 'http://macaronics.iptime.org:3060/favicon.ico'} />
-                    <meta property="og:url" content={`http://macaronics.iptime.org:3060/post/${id}`} />
-                </Head>
-            }
 
-            {singlePost && <PostCard key={id && id} post={singlePost} />}
+            <Head>
+                <title>
+                    {singlePost.User.nickname}
+                    님의 글
+                </title>
+                <meta name="description" content={singlePost.content} />
+                <meta property="og:title" content={`${singlePost.User.nickname}님의 게시글`} />
+                <meta property="og:description" content={singlePost.content} />
+                <meta property="og:image" content={singlePost.Images[0] ? singlePost.Images[0].src : 'http://macaronics.iptime.org:3060/favicon.ico'} />
+                <meta property="og:url" content={`http://macaronics.iptime.org:3060/post/${id}`} />
+            </Head>
+
+
+            <PostCard key={id && id} post={singlePost} />
 
             {singlePost == null && '등록된 게시글이 없습니다.'}
 
