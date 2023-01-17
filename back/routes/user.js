@@ -9,7 +9,7 @@ const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 //브라우저에서 새로고침 할때마다 요청처리 된다.
 router.get('/', async (req, res, next) => {
-    console.log("브라우저에서 새로고침 할때마다 요청처리 :", req.headers);
+    //console.log("브라우저에서 새로고침 할때마다 요청처리 :", req.headers);
 
     try {
         if (req.user) {

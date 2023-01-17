@@ -36,11 +36,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
+
 app.use(session({
     secret: process.env.COOKIE_SECRET,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        secure: false,
+        domain: process.env.NODE_ENV === 'production' && '.mynodebird.com'
+    }
 }));
+
+
 app.use(passport.initialize()); //패스포트 초기화
 app.use(passport.session());
 
@@ -57,7 +65,7 @@ if (process.env.NODE_ENV === 'production') {
         //origin: 'https://nodebird.com'
         // origin: true, // orign: true 로 설정해두면 * 대신 보낸 곳의 주소가 자동으로 들어가 편리합니다.
         //프론트 URL 주소
-        origin: ["http://localhost:3060", "http://192.168.120.136", "http://192.168.120.136:3060"],
+        origin: ["http://localhost:3060", "http://192.168.120.136", "http://192.168.120.136:3060", "http://mynodebird.com"],
         credentials: true
     }));
 
@@ -67,8 +75,8 @@ if (process.env.NODE_ENV === 'production') {
     app.use(cors({
         //origin: 'https://nodebird.com'
         // origin: true, // orign: true 로 설정해두면 * 대신 보낸 곳의 주소가 자동으로 들어가 편리합니다.
-        origin: ["http://localhost:3060", "http://192.168.120.136", "http://192.168.120.136:3060"],
-        credentials: true
+        origin: true,
+        credentials: true  //사용ㅇ자 인증이 필요한 리소스 (쿠키, ... 등) 접근
     }));
 }
 
