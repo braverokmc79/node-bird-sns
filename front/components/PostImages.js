@@ -16,7 +16,7 @@ const ImgDiv = styled.div`
     }
 `;
 
-export const ImageURL = `${backURL}`;
+export const ImageURL = backURL;
 
 const PostImages = ({ images }) => {
 

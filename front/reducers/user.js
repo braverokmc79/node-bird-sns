@@ -104,7 +104,6 @@ export const LOAD_FOLLOWINGS_SUCCESS = "LOAD_FOLLOWINGS_SUCCESS";
 export const LOAD_FOLLOWINGS_FAILURE = "LOAD_FOLLOWINGS_FAILURE";
 
 
-
 export const loginRequestAction = (data) => {
     return {
         type: LOG_IN_REQUEST,
