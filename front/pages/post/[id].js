@@ -1,6 +1,7 @@
 //post/[id].js
 import { useSelector } from 'react-redux';
 import Head from 'next/head';
+
 import { useRouter } from 'next/router';
 import AppLayout from '../../components/AppLayout';
 import PostCard from '../../components/PostCard';
@@ -9,6 +10,7 @@ import { LOAD_MY_INFO_REQUEST } from './../../reducers/user';
 import { END } from 'redux-saga';
 import wrapper from '../../store/configureStore';
 import axios from 'axios';
+import { backURL } from '../../config/config';
 
 const Post = () => {
     const router = useRouter();
@@ -30,16 +32,8 @@ const Post = () => {
                 <meta name="description" content={singlePost.content} />
                 <meta property="og:title" content={`${singlePost.User.nickname}님의 게시글`} />
                 <meta property="og:description" content={singlePost.content} />
-                <meta property="og:image" content={singlePost.Images[0] ? singlePost.Images[0].src : 'http://macaronics.iptime.org:3060/favicon.ico'} />
+                <meta property="og:image" content={singlePost.Images[0] ? backURL + singlePost.Images[0].src : 'http://macaronics.iptime.org:3060/favicon.ico'} />
                 <meta property="og:url" content={`http://macaronics.iptime.org:3060/post/${id}`} />
-
-                <meta property="og:title" content="디도스방어 - 107 CLOUD" />
-                <meta property="og:site_name" content="디도스방어 - 107 CLOUD" />
-                <meta property="og:author" content="디도스방어 - 107 CLOUD" />
-                <meta property="og:type" content="website" />
-                <meta property="og:image" content="https://cdn.jsdelivr.net/gh/dlwodyd4013/107CLOUD@1.0.1/assets/img/org-img.jpg" />
-                <meta property="og:description" content="디도스 방어, 디도스 방어존, 디도스방어 호스팅, 디도스 공격, 디도스, 클라우드 플레어" />
-                <meta property="og:url" content="https://107cloud.co.kr" />
 
 
             </Head>
