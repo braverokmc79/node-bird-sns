@@ -23,6 +23,9 @@ const ImagesZoom = ({ images, onClose, ImageURL }) => {
     };
     const [currentSlide, setCurrentSlide] = useState(0);
 
+
+    console.log(" ImageURL : ", ImageURL);
+
     return (
         <Overlay>
             <Global />
