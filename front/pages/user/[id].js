@@ -41,20 +41,19 @@ const User = () => {
     return (
         <AppLayout>
             {userInfo && (
-                <div>{userInfo.nickname}</div>
-
-                // <Head>
-                //     <title>
-                //         {userInfo.nickname}
-                //         님의 글
-                //     </title>
-                //     <meta name="description" content={`${userInfo.nickname}님의 게시글`} />
-                //     <meta property="og:title" content={`${userInfo.nickname}님의 게시글`} />
-                //     <meta property="og:description" content={`${userInfo.nickname}님의 게시글`} />
-                //     <meta property="og:image" content="https://nodebird.com/favicon.ico" />
-                //     <meta property="og:url" content={`https://nodebird.com/user/${id}`} />
-                // </Head>
+                <Head>
+                    <title>
+                        {userInfo.nickname}
+                        님의 글
+                    </title>
+                    <meta name="description" content={`${userInfo.nickname}님의 게시글`} />
+                    <meta property="og:title" content={`${userInfo.nickname}님의 게시글`} />
+                    <meta property="og:description" content={`${userInfo.nickname}님의 게시글`} />
+                    <meta property="og:image" content="http://macaronics.iptime.org:3060/favicon.ico" />
+                    <meta property="og:url" content={`http://macaronics.iptime.org:3060/user/${id}`} />
+                </Head>
             )}
+
             {userInfo && (userInfo.id !== me?.id)
                 ? (
                     <Card

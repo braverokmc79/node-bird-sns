@@ -96,8 +96,9 @@ const PostCard = ({ post }) => {
     const content = (
         <div>
             {id && post.User.id === id ? (
+
                 <Space wrap>
-                    <Button type='primary' info>수정</Button>
+                    {!post.RetweetId && <Button type='primary' info>수정</Button>}
                     <Button type='primary' danger loading={removePostLoading} onClick={onRemovePost}>삭제</Button>
                 </Space>
 
@@ -120,10 +121,12 @@ const PostCard = ({ post }) => {
                     liked ? <HeartTwoTone key="heart" twoToneColor="red" onClick={onUnlike} /> :
                         <HeartOutlined key="heart" onClick={onLike} />,
                     <MessageOutlined key="comment" onClick={onToggleComment} />,
-                    <Popover content={content} title="" key="popover" style={{ textAlign: "center" }}
-                    >
+
+
+                    <Popover content={content} title="" key="popover" style={{ textAlign: "center" }}>
                         <EllipsisOutlined />
                     </Popover>
+
                 ]}
                 title={post.Retweet && `'${post.User.nickname}'님이 리트윗 하셨습니다.`}
                 extra={id && <FollowButton post={post} />}
@@ -140,7 +143,7 @@ const PostCard = ({ post }) => {
                         </div>
                         <Card.Meta
                             avatar={
-                                <Link href={` / user / ${post.Retweet.User.id}`} prefetch={false} >
+                                <Link href={`/user/${post.Retweet.User.id}`} prefetch={false} >
                                     <Avatar>{post.Retweet.User.nickname[0]}</Avatar>
                                 </Link>
                             }
@@ -155,7 +158,7 @@ const PostCard = ({ post }) => {
                         <div style={{ float: 'right' }}>{moment(post.createdAt).format('YYYY.MM.DD')}</div>
                         <Card.Meta
                             avatar={
-                                <Link href={`/ user / ${post.User.id}`} prefetch={false}>
+                                <Link href={`/user/${post.User.id}`} prefetch={false}>
                                     <Avatar>{post.User.nickname[0]}</Avatar>
                                 </Link>
                             }

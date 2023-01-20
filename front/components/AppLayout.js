@@ -30,9 +30,9 @@ const AppLayout = ({ children }) => {
 
 
     const items = [
-        { label: <Link href="/" >노드버드</Link>, key: 'item-1' },
-        me && { label: <Link href="/profile">프로필</Link>, key: 'item-2' },
-        !me && { label: <Link href="/signup">회원가입</Link>, key: 'item-3' },
+        { label: <Link href="/" prefetch={false}>노드버드</Link>, key: 'item-1' },
+        me && { label: <Link href="/profile" prefetch={false}>프로필</Link>, key: 'item-2' },
+        !me && { label: <Link href="/signup" prefetch={false}>회원가입</Link>, key: 'item-3' },
         {
             label: <SearchInput enterButton value={searchInput} onChange={onChangeSearchInput} />,
             key: 'item-4'
