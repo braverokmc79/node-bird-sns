@@ -140,9 +140,11 @@ const PostCard = ({ post }) => {
                         </div>
                         <Card.Meta
                             avatar={
-                                <Link href={`/user/${post.Retweet.User.id}`}>
+                                <Link href={` / user / ${post.Retweet.User.id}`} prefetch={false} >
                                     <Avatar>{post.Retweet.User.nickname[0]}</Avatar>
-                                </Link>}
+                                </Link>
+                            }
+
                             title={post.Retweet.User.nickname}
                             description={<PostCardContent postData={post.Retweet.content} />}
                         />
@@ -153,7 +155,7 @@ const PostCard = ({ post }) => {
                         <div style={{ float: 'right' }}>{moment(post.createdAt).format('YYYY.MM.DD')}</div>
                         <Card.Meta
                             avatar={
-                                <Link href={`/user/${post.User.id}`}>
+                                <Link href={`/ user / ${post.User.id}`} prefetch={false}>
                                     <Avatar>{post.User.nickname[0]}</Avatar>
                                 </Link>
                             }
@@ -182,7 +184,7 @@ const PostCard = ({ post }) => {
                                     <Comment
                                         author={item.User.nickname}
                                         avatar={
-                                            <Link href={`/user/${item.User.id}`}>
+                                            <Link href={`/user/${item.User.id}`} prefetch={false}>
                                                 <Avatar>{item.User.nickname[0]}</Avatar>
                                             </Link>
                                         }

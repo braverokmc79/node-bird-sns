@@ -43,6 +43,7 @@ app.use(session({
     secret: process.env.COOKIE_SECRET,
     resave: false,
     saveUninitialized: false,
+    proxy:true,
     cookie: {
         httpOnly: true,
         secure: false,
@@ -62,6 +63,8 @@ passportConfig();
 
 
 if (process.env.NODE_ENV === 'production') {
+    //app.set('trust proxy', 1);
+
     console.log(" production 실행 ");
     app.use(morgan('combined'));
     app.use(hpp());
