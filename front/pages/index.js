@@ -1,5 +1,5 @@
 
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import AppLayout from './../components/AppLayout';
 import { useSelector, useDispatch } from 'react-redux';
 import PostCard from './../components/PostCard';

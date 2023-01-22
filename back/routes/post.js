@@ -410,9 +410,7 @@ router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => {     //PO
                 attributes: ['id']
             }
             ]
-        })
-
-
+        });
 
         res.status(201).json(retweetWithPrevPost);
     } catch (error) {

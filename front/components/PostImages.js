@@ -17,6 +17,7 @@ const ImgDiv = styled.div`
 `;
 
 
+const BACK_URL = backURL + "/";
 
 const PostImages = ({ images }) => {
 
@@ -37,17 +38,17 @@ const PostImages = ({ images }) => {
     if (images.length === 1) {
         return (
             <ImgDiv>
-                <img role="presentation" src={backURL + images[0].src} alt={images[0].src} onClick={onZoom} width="49%" />
-                {showImageZoom && <ImagesZoom ImageURL={backURL}    images={images} onClose={onClose} />}
+                <img role="presentation" src={BACK_URL + images[0].src} alt={images[0].src} onClick={onZoom} width="49%" />
+                {showImageZoom && <ImagesZoom ImageURL={BACK_URL} images={images} onClose={onClose} />}
             </ImgDiv>
         )
     } else if (images.length === 2) {
         return (
             <>
                 <ImgDiv>
-                    <img role="presentation" src={backURL + images[0].src} alt={images[0].src} onClick={onZoom} style={{ width: "49%" }} />
-                    <img role="presentation" src={backURL + images[1].src} alt={images[1].src} onClick={onZoom} style={{ width: "49%" }} />
-                    {showImageZoom && <ImagesZoom images={images} ImageURL={backURL} onClose={onClose} />}
+                    <img role="presentation" src={BACK_URL + images[0].src} alt={images[0].src} onClick={onZoom} style={{ width: "49%" }} />
+                    <img role="presentation" src={BACK_URL + images[1].src} alt={images[1].src} onClick={onZoom} style={{ width: "49%" }} />
+                    {showImageZoom && <ImagesZoom images={images} ImageURL={BACK_URL} onClose={onClose} />}
                 </ImgDiv>
             </>
         )
@@ -57,7 +58,7 @@ const PostImages = ({ images }) => {
         return (
             <>
                 <ImgDiv style={{ width: "100%" }}>
-                    <img role="presentation" src={backURL + images[0].src} alt={images[0].src}
+                    <img role="presentation" src={BACK_URL + images[0].src} alt={images[0].src}
                         onClick={onZoom} style={{ width: "49%", display: `${showImageZoom ? 'none' : "inline-block"}` }} />
 
                     <div
@@ -73,7 +74,7 @@ const PostImages = ({ images }) => {
                         {images.length - 1}
                         개의 사진 더보기
 
-                        {showImageZoom && <ImagesZoom images={images} ImageURL={backURL} onClose={onClose} />}
+                        {showImageZoom && <ImagesZoom images={images} ImageURL={BACK_URL} onClose={onClose} />}
                     </div>
                 </ImgDiv>
             </>
