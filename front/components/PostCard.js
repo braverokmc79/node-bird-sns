@@ -10,7 +10,7 @@ import { createGlobalStyle } from 'styled-components';
 import PostCardContent from './PostCardContent';
 import { REMOVE_POST_REQUEST } from '../reducers/post';
 import FollowButton from './FollowButton';
-import { LIKE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_REQUEST, LOAD_POSTS_REQUEST } from '../reducers/post';
+import { LIKE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_REQUEST, LOAD_POSTS_REQUEST, UPDATE_POST_REQUEST } from '../reducers/post';
 import Link from 'next/link';
 import moment from 'moment';
 
@@ -36,8 +36,7 @@ const PostCard = ({ post }) => {
     const [commentFormOpened, setCommentFormOpened] = useState(false);
     const id = useSelector((state) => state.user.me?.id);
     const liked = post.Likers.find((v) => v.id === id);
-
-
+    const [editMode, setEditMode] = useState(false);
 
 
     const onLike = useCallback(() => {
@@ -93,12 +92,33 @@ const PostCard = ({ post }) => {
     }, [id]);
 
 
+
+    const onClickUpdate = useCallback(() => {
+        setEditMode(true);
+    }, []);
+
+    const onCancelUpdatePost = useCallback(() => {
+        setEditMode(false);
+    }, []);
+
+    const onChangePost = useCallback((editText) => () => {
+        dispatch({
+            type: UPDATE_POST_REQUEST,
+            data: {
+                PostId: post.id,
+                content: editText,
+            },
+        });
+    }, [post]);
+
+
     const content = (
         <div>
             {id && post.User.id === id ? (
 
                 <Space wrap>
-                    {!post.RetweetId && <Button type='primary' info>수정</Button>}
+                    {!post.RetweetId && <Button type='primary' info onClick={onClickUpdate} >수정</Button>}
+
                     <Button type='primary' danger loading={removePostLoading} onClick={onRemovePost}>삭제</Button>
                 </Space>
 
@@ -109,9 +129,15 @@ const PostCard = ({ post }) => {
         </div >
     );
 
+
+
+
     return (
         <div style={{ marginBottom: 50 }}>
+
+
             <Global />
+
 
             <Card key={post.Image}
                 cover={post.Images[0] && <PostImages images={post.Images} />}
@@ -121,7 +147,6 @@ const PostCard = ({ post }) => {
                     liked ? <HeartTwoTone key="heart" twoToneColor="red" onClick={onUnlike} /> :
                         <HeartOutlined key="heart" onClick={onLike} />,
                     <MessageOutlined key="comment" onClick={onToggleComment} />,
-
 
                     <Popover content={content} title="" key="popover" style={{ textAlign: "center" }}>
                         <EllipsisOutlined />
@@ -147,9 +172,10 @@ const PostCard = ({ post }) => {
                                     <Avatar>{post.Retweet.User.nickname[0]}</Avatar>
                                 </Link>
                             }
-
                             title={post.Retweet.User.nickname}
-                            description={<PostCardContent postData={post.Retweet.content} />}
+                            description={<PostCardContent editMode={editMode}
+                                onChangePost={onChangePost}
+                                onCancelUpdatePost={onCancelUpdatePost} postData={post.Retweet.content} />}
                         />
 
                     </Card>
@@ -163,13 +189,17 @@ const PostCard = ({ post }) => {
                                 </Link>
                             }
                             title={post.User.nickname}
-                            description={<PostCardContent postData={post.content} />}
+                            description={<PostCardContent editMode={editMode}
+                                onChangePost={onChangePost}
+                                onCancelUpdatePost={onCancelUpdatePost} postData={post.content} />}
                         />
                     </>
 
                 }
                 <Image />
             </Card >
+
+
 
 
 

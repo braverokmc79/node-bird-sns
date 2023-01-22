@@ -11,7 +11,8 @@ import {
     UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE, generateDummyPost,
     RETWEET_REQUEST, RETWEET_SUCCESS, RETWEET_FAILURE,
     LOAD_USER_POSTS_REQUEST, LOAD_USER_POSTS_SUCCESS, LOAD_USER_POSTS_FAILURE,
-    LOAD_HASHTAG_POSTS_REQUEST, LOAD_HASHTAG_POSTS_SUCCESS, LOAD_HASHTAG_POSTS_FAILURE
+    LOAD_HASHTAG_POSTS_REQUEST, LOAD_HASHTAG_POSTS_SUCCESS, LOAD_HASHTAG_POSTS_FAILURE,
+    UPDATE_POST_REQUEST, UPDATE_POST_SUCCESS, UPDATE_POST_FAILURE,
 
 } from '../reducers/post'
 
@@ -333,8 +334,6 @@ function* removePost(action) {
             data: result.data.PostId
         });
 
-
-
     } catch (err) {
         console.log(err);
         yield put({
@@ -344,10 +343,41 @@ function* removePost(action) {
     }
 }
 
-
-
 function* watchRemovePost() {
     yield takeLatest(REMOVE_POST_REQUEST, removePost);
+}
+
+
+
+
+
+
+//게시글 수정
+function updatePostAPI(data) {
+    console.log("게시글 수정 : ", data);
+
+    return axios.patch(`/post/${data.PostId}`, data);
+}
+
+function* updatePost(action) {
+    try {
+        const result = yield call(updatePostAPI, action.data);
+        yield put({
+            type: UPDATE_POST_SUCCESS,
+            data: result.data
+        });
+
+    } catch (err) {
+        console.log(err);
+        yield put({
+            type: UPDATE_POST_FAILURE,
+            error: err.response.data
+        });
+    }
+}
+
+function* watchUpdatePost() {
+    yield takeLatest(UPDATE_POST_REQUEST, updatePost);
 }
 
 
@@ -400,7 +430,8 @@ export default function* postSaga() {
         fork(watchUnlikePost),
         fork(watchRetweet),
         fork(watchLoadHashtagPosts),
-        fork(watchLoadUserPosts)
+        fork(watchLoadUserPosts),
+        fork(watchUpdatePost)
     ]);
 }
 

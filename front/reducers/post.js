@@ -43,7 +43,11 @@ export const initialState = {
 
     reTweetLoading: false,
     reTweetDone: false,
-    reTweetError: null
+    reTweetError: null,
+
+    updatePostLoading: false,
+    updatePostDone: false,
+    updatePostError: null,
 }
 
 
@@ -121,7 +125,6 @@ export const LOAD_POST_REQUEST = 'LOAD_POST_REQUEST';
 export const LOAD_POST_SUCCESS = 'LOAD_POST_SUCCESS';
 export const LOAD_POST_FAILURE = 'LOAD_POST_FAILURE';
 
-
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
@@ -129,6 +132,18 @@ export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
 export const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST';
 export const REMOVE_POST_SUCCESS = 'REMOVE_POST_SUCCESS';
 export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
+
+
+
+
+//글 수정 업데이 하기
+export const UPDATE_POST_REQUEST = 'UPDATE_POST_REQUEST';
+export const UPDATE_POST_SUCCESS = 'UPDATE_POST_SUCCESS';
+export const UPDATE_POST_FAILURE = 'UPDATE_POST_FAILURE';
+
+
+
+
 
 export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
@@ -318,6 +333,10 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
             break;
 
 
+
+
+
+
         //글작성
         case ADD_POST_REQUEST:
             draft.addPostLoading = true;
@@ -359,6 +378,26 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
             draft.removePostLoading = false;
             draft.removePostError = action.error;
             break;
+
+
+        //글수정
+        case UPDATE_POST_REQUEST:
+            draft.updatePostLoading = true;
+            draft.updatePostDone = false;
+            draft.updatePostError = null;
+            break;
+
+        case UPDATE_POST_SUCCESS:
+            draft.updatePostLoading = false;
+            draft.updatePostDone = true;
+            draft.mainPosts.find((v) => v.id === action.data.PostId).content = action.data.content;
+            break;
+
+        case UPDATE_POST_FAILURE:
+            draft.updatePostLoading = false;
+            draft.updatePostError = action.error;
+            break;
+
 
 
 
