@@ -73,7 +73,7 @@ if (process.env.NODE_ENV === 'production') {
         //origin: 'https://nodebird.com'
         // origin: true, // orign: true 로 설정해두면 * 대신 보낸 곳의 주소가 자동으로 들어가 편리합니다.
         //프론트 URL 주소
-        origin: ["http://localhost:3060", "http://macaronics.iptime.org", "http://macaronics.iptime.org:3060"],
+        origin: ["http://localhost:3060", "http://macaronics.iptime.org", "http://macaronics.iptime.org:3060", "https://mesns.vercel.app"],
         credentials: true
     }));
 
